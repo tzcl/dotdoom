@@ -3,6 +3,11 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+;; Increase fill-column in org-mode
+(defun toby-text-mode-hook ()
+  (setq fill-column 120))
+(add-hook 'text-mode-hook #'toby-text-mode-hook)
+
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Toby Law"
