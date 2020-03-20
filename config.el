@@ -3,10 +3,17 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-;; Increase fill-column in org-mode
-(defun toby-text-mode-hook ()
+;; Increase fill-column when editing text
+(defun toby/text-mode-hook ()
   (setq fill-column 120))
-(add-hook 'text-mode-hook #'toby-text-mode-hook)
+(add-hook 'text-mode-hook #'toby/text-mode-hook)
+
+;; Disable line numbers in zen-mode
+(defun toby/writeroom-mode-hook ()
+  (setq display-line-numbers-type nil)
+  (visual-line-mode))
+(add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
+;; (add-hook 'writeroom-mode-hook #'display-line-numbers-mode)
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -24,6 +31,7 @@
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 (setq doom-font (font-spec :family "monospace" :size 14))
+(if (string= (system-name) "xps") (setq doom-font (font-spec :family "monospace" :size 16)))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
