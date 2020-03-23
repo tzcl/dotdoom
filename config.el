@@ -20,23 +20,18 @@
 (defun toby/writeroom-mode-hook ()
   (toby/toggle-minor-mode 'display-line-numbers-mode)
   (toby/toggle-minor-mode 'hl-line-mode)
+  (custom-set-faces! `(focus-focused :family "DejaVu"))
   (toby/toggle-minor-mode 'focus-mode))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
 ;; Define keys
-(general-define-key
- :keymaps 'override
- "C-'" 'better-comment-dwim
- "C-x n" 'narrow-or-widen-dwim)
+(map! "C-'" 'better-comment-dwim
+      "C-x n" 'narrow-or-widen-dwim)
 
-(general-define-key
- :states 'insert
- "RET" '+default/newline
- "C-j" 'newline-and-indent)
+(map! :i "RET" '+default/newline
+      :i "C-j" 'newline-and-indent)
 
-(general-define-key
- :states 'visual
- "DEL" 'evil-delete-char)
+(map! :v "DEL" 'evil-delete-char)
 
 ;; DWIM functions
 ;; Better commenting
