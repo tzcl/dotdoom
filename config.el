@@ -24,14 +24,24 @@
   (toby/toggle-minor-mode 'focus-mode))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
+;; Make org-toggle-headings nicer
+(require 'org)
+(defun toby/org-toggle-headings ()
+  (interactive)
+  (org-toggle-heading (org-current-level)))
+
 ;; Define keys
 (map! "C-'" 'better-comment-dwim
-      "C-x n" 'narrow-or-widen-dwim)
+      "C-x n" 'narrow-or-widen-dwim
 
-(map! :i "RET" '+default/newline
-      :i "C-j" 'newline-and-indent)
+      :i "RET" '+default/newline
+      :i "C-j" 'newline-and-indent
 
-(map! :v "DEL" 'evil-delete-char)
+      :v "DEL" 'evil-delete-char)
+
+(map! :map org-mode-map
+      :mnv "SPC m h" 'toby/org-toggle-headings
+      :ei "M-SPC m h" 'toby/org-toggle-headings)
 
 ;; DWIM functions
 ;; Better commenting
