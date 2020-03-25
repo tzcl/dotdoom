@@ -6,6 +6,15 @@
 ;; Make focus mode work with paragraphs
 (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph)))
 
+;; oops configured git wrong
+;; uhhh need to change where magit looks for git credentials?
+;; I needed to remove the directory I made
+;; Started the daemon?? yep -- magit's turn
+;; Easier to change git settings than it is to rewrite magit
+;; Is magit looking in the right place now? Let's find out
+;; Working before, is it working after restart?
+;; Committed... now is the big question
+
 ;; Define paragraphs in text-mode to include lists
 (defun toby/text-mode-hook ()
   (setq paragraph-start "^\n")
@@ -14,6 +23,21 @@
 
 (defun toby/toggle-minor-mode (mode)
   (if (symbol-value mode) (funcall (symbol-function mode) 0) (funcall (symbol-function mode) 1)))
+
+;; Make flyspell check buffer on turning it on
+;; Disable by default
+(require 'flyspell)
+(remove-hook! '(org-mode-hook
+                markdown-mode-hook
+                TeX-mode-hook
+                rst-mode-hook
+                mu4e-compose-mode-hook
+                message-mode-hook)
+  #'flyspell-mode)
+(defun toby/flyspell-mode ()
+  (interactive)
+  (toby/toggle-minor-mode 'flyspell-mode)
+  (if flyspell-mode (flyspell-buffer)))
 
 ;; Disable line numbers in zen-mode
 (require 'focus)
@@ -38,6 +62,9 @@
       :i "C-j" 'newline-and-indent
 
       :v "DEL" 'evil-delete-char)
+
+(map! :leader
+      "t s" 'toby/flyspell-mode)
 
 (map! :map org-mode-map
       :mnv "SPC m h" 'toby/org-toggle-headings
