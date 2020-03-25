@@ -6,15 +6,6 @@
 ;; Make focus mode work with paragraphs
 (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph)))
 
-;; oops configured git wrong
-;; uhhh need to change where magit looks for git credentials?
-;; I needed to remove the directory I made
-;; Started the daemon?? yep -- magit's turn
-;; Easier to change git settings than it is to rewrite magit
-;; Is magit looking in the right place now? Let's find out
-;; Working before, is it working after restart?
-;; Committed... now is the big question
-
 ;; Define paragraphs in text-mode to include lists
 (defun toby/text-mode-hook ()
   (setq paragraph-start "^\n")
