@@ -35,6 +35,7 @@
 (defun toby/writeroom-mode-hook ()
   (toby/toggle-minor-mode 'display-line-numbers-mode)
   (toby/toggle-minor-mode 'hl-line-mode)
+  (toby/toggle-minor-mode 'visual-line-mode)
   (custom-set-faces! `(focus-focused :family "DejaVu Sans Mono"))
   (toby/toggle-minor-mode 'focus-mode))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
