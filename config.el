@@ -3,6 +3,11 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+;; TODO: set up key bindings for LSP mode
+;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
+;; TODO: set up org agenda? lots of functionality but have other equivalent
+;; tools, like using Todoist because it's cross-platform (mobile)
+
 ;; Make focus mode work with paragraphs
 (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph)))
 
@@ -56,7 +61,10 @@
       :v "DEL" 'evil-delete-char)
 
 (map! :leader
-      "t s" 'toby/flyspell-mode)
+      "t s" 'toby/flyspell-mode
+      "l f" 'lsp-find-declaration
+      "l d" 'lsp-find-definition
+      "f i" 'toby/find-index)
 
 (map! :map org-mode-map
       :mnv "SPC m h" 'toby/org-toggle-headings
