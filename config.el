@@ -51,6 +51,13 @@
   (interactive)
   (org-toggle-heading (org-current-level)))
 
+(defun toby/find-index ()
+  (interactive)
+  (find-file "/home/toby/gdrive/index.org"))
+(add-to-list '+doom-dashboard-menu-sections '("Open index"
+                                              :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
+                                              :action toby/find-index) t)
+
 ;; Define keys
 (map! "C-'" 'better-comment-dwim
       "C-x n" 'narrow-or-widen-dwim
