@@ -7,6 +7,7 @@
 ;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
 ;; TODO: set up org agenda? lots of functionality but have other equivalent
 ;; tools, like using Todoist because it's cross-platform (mobile)
+;; TODO: set up bookmarks to access common files/websites/folders quickly
 
 ;; Make focus mode work with paragraphs
 (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph)))
@@ -50,6 +51,19 @@
 (defun toby/org-toggle-headings ()
   (interactive)
   (org-toggle-heading (org-current-level)))
+
+;; Make image backgrounds match the background colour
+(defun toby/create-image-with-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; get this return result style from `create-image'
+    (append (list file type data-p)
+            (list :background (face-background 'default))
+            props)))
+(advice-add 'create-image :filter-args #'toby/create-image-with-background-color)
 
 (defun toby/find-index ()
   (interactive)
