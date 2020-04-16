@@ -65,6 +65,27 @@
             props)))
 (advice-add 'create-image :filter-args #'toby/create-image-with-background-color)
 
+(defun toby/auto-toggle-equation ()
+  (when (looking-back (rx "$ "))
+    (save-excursion
+      (backward-char 1)
+      (org-toggle-latex-fragment))))
+(add-hook 'org-mode-hook (lambda () (add-hook 'post-self-insert-hook #'toby/auto-toggle-equation 'append 'local)))
+
+;; Shortcut to insert images
+(defvar img-d "~/gdrive/misc/img")
+(defun toby/img-complete-link ()
+  "Create an image link using completion."
+  (interactive)
+  (org-insert-link nil (concat "file:" (abbreviate-file-name (expand-file-name (read-file-name "Image: " img-d)))) nil))
+
+  (setq org-file-apps (butlast org-file-apps))
+  (setq org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
+                                              ("\\.png\\'" . "sxiv %s")
+                                              ("\\.jpg\\'" . "sxiv %s")
+                                              ("\\.jpeg\\'" . "sxiv %s")
+                                              ("\\.gif\\'" . "sxiv %s"))))
+
 (defun toby/find-index ()
   (interactive)
   (find-file "/home/toby/gdrive/index.org"))
@@ -89,7 +110,12 @@
 
 (map! :map org-mode-map
       :mnv "SPC m h" 'toby/org-toggle-headings
-      :ei "M-SPC m h" 'toby/org-toggle-headings)
+      :ei "M-SPC m h" 'toby/org-toggle-headings
+      :mnv "SPC m d" 'toby/img-complete-link
+      :ei "M-SPC m d" 'toby/img-complete-link
+
+      :mnv "SPC m D" 'org-deadline
+      :ei "M-SPC m D" 'org-deadline)
 
 ;; DWIM functions
 ;; Better commenting
