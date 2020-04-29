@@ -104,8 +104,8 @@
 
 (map! :leader
       "t s" 'toby/flyspell-mode
-      "c D" 'xref-find-definitions-other-window
-      "c g" '+lookup/references
+      "t p" '+popup/toggle
+      "t o" 'org-tree-slide-mode
       "f i" 'toby/find-index)
 
 (map! :map org-mode-map
