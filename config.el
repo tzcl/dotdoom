@@ -3,7 +3,7 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-;; TODO: set up key bindings for LSP mode
+;; TODO: set up key bindings for LSP mode, learn to use more effectively
 ;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
 ;; TODO: set up org agenda? lots of functionality but have other equivalent
 ;; tools, like using Todoist because it's cross-platform (mobile)
@@ -100,6 +100,8 @@
 ;; Define keys
 (map! "C-'" 'better-comment-dwim
       "C-x n" 'narrow-or-widen-dwim
+
+      :mnv "g D" 'xref-find-definitions-other-window
 
       :i "RET" '+default/newline
       :i "C-j" 'newline-and-indent
