@@ -8,6 +8,7 @@
 ;; TODO: set up org agenda? lots of functionality but have other equivalent
 ;; tools, like using Todoist because it's cross-platform (mobile)
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
+;; TODO: in focus mode, clicking causes hl-line-mode to reappear
 
 ;; Make focus mode work with paragraphs
 (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph)))
@@ -92,6 +93,9 @@
 (add-to-list '+doom-dashboard-menu-sections '("Open index"
                                               :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
                                               :action toby/find-index) t)
+
+;; Add cppreference to +lookup/online
+(add-to-list '+lookup-provider-url-alist '("C++ Reference" "https://en.cppreference.com/mwiki/index.php?search=%s"))
 
 ;; Define keys
 (map! "C-'" 'better-comment-dwim
