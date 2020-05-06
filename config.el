@@ -103,9 +103,6 @@
 
       :mnv "g D" 'xref-find-definitions-other-window
 
-      :i "RET" '+default/newline
-      :i "C-j" 'newline-and-indent
-
       :v "DEL" 'evil-delete-char)
 
 (map! :leader
