@@ -11,7 +11,11 @@
 ;; TODO: in focus mode, clicking causes hl-line-mode to reappear
 
 ;; Make focus mode work with paragraphs
-(setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph)))
+(use-package! focus
+  :config
+  ;; Initialise focus-mode to be off
+  (defvar focus-mode nil)
+  (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph))))
 
 ;; Define paragraphs in text-mode to include lists
 (defun toby/text-mode-hook ()
@@ -24,7 +28,6 @@
 
 ;; Make flyspell check buffer on turning it on
 ;; Disable by default
-(require 'flyspell)
 (remove-hook! '(org-mode-hook
                 markdown-mode-hook
                 TeX-mode-hook
@@ -38,7 +41,6 @@
   (if flyspell-mode (flyspell-buffer)))
 
 ;; Disable line numbers in zen-mode
-(require 'focus)
 (defun toby/writeroom-mode-hook ()
   (toby/toggle-minor-mode 'display-line-numbers-mode)
   (toby/toggle-minor-mode 'hl-line-mode)
@@ -48,7 +50,19 @@
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
 ;; Make org-toggle-headings nicer
-(require 'org)
+(after! org
+  (setq org-hide-leading-stars nil
+        org-indent-mode-turns-on-hiding-stars nil
+        org-ellipsis " ▼ ")
+  (setq org-file-apps (butlast org-file-apps))
+  (setq org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
+                                              ("\\.png\\'" . "sxiv %s")
+                                              ("\\.jpg\\'" . "sxiv %s")
+                                              ("\\.jpeg\\'" . "sxiv %s")
+                                              ("\\.gif\\'" . "sxiv %s")))))
+(after! org-superstar
+  (setq org-superstar-leading-bullet ?\s))
+
 (defun toby/org-toggle-headings ()
   (interactive)
   (org-toggle-heading (org-current-level)))
@@ -79,13 +93,6 @@
   "Create an image link using completion."
   (interactive)
   (org-insert-link nil (concat "file:" (abbreviate-file-name (expand-file-name (read-file-name "Image: " img-d)))) nil))
-
-  (setq org-file-apps (butlast org-file-apps))
-  (setq org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
-                                              ("\\.png\\'" . "sxiv %s")
-                                              ("\\.jpg\\'" . "sxiv %s")
-                                              ("\\.jpeg\\'" . "sxiv %s")
-                                              ("\\.gif\\'" . "sxiv %s"))))
 
 (defun toby/find-index ()
   (interactive)
@@ -174,9 +181,6 @@ narrow even if buffer is already narrowed."
       mode-line-default-help-echo nil
       show-help-function nil)
 
-;; Initialise focus-mode to be off
-(defvar focus-mode nil)
-
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -195,14 +199,9 @@ narrow even if buffer is already narrowed."
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
-
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
-
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
