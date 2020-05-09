@@ -43,7 +43,7 @@
   (toby/toggle-minor-mode 'display-line-numbers-mode)
   (toby/toggle-minor-mode 'hl-line-mode)
   (toby/toggle-minor-mode 'visual-line-mode)
-  (custom-set-faces! `(focus-focused :family "DejaVu Sans Mono"))
+  (toby/toggle-minor-mode 'company-mode)
   (toby/toggle-minor-mode 'focus-mode))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
@@ -107,7 +107,6 @@
 
 (map! :leader
       "t s" 'toby/flyspell-mode
-      "t p" '+popup/toggle
       "t o" 'org-tree-slide-mode
       "f i" 'toby/find-index)
 
@@ -175,7 +174,7 @@ narrow even if buffer is already narrowed."
       mode-line-default-help-echo nil
       show-help-function nil)
 
-;; Initialised focus-mode to be off
+;; Initialise focus-mode to be off
 (defvar focus-mode nil)
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
