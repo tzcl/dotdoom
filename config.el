@@ -8,6 +8,7 @@
 ;; TODO: set up org agenda? lots of functionality but have other equivalent
 ;; tools, like using Todoist because it's cross-platform (mobile)
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
+;; TODO: look into how org-download works
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -62,8 +63,8 @@
 (map! :map org-mode-map
       :mnv "SPC m h" 'toby/org-toggle-headings
       :ei "M-SPC m h" 'toby/org-toggle-headings
-      :mnv "SPC m d" 'toby/img-complete-link
-      :ei "M-SPC m d" 'toby/img-complete-link
+      ;; :mnv "SPC m d" 'toby/img-complete-link breaks org-capture keybindings
+      ;; :ei "M-SPC m d" 'toby/img-complete-link
 
       :mnv "SPC m D" 'org-deadline
       :ei "M-SPC m D" 'org-deadline)
