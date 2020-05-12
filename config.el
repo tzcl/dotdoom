@@ -4,10 +4,12 @@
 ;;; TODO
 
 ;; TODO: set up key bindings for LSP mode, learn to use more effectively
+;; TODO: set up bookmarks to access common files/websites/folders quickly
+
+;;; Org
 ;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
 ;; TODO: set up org agenda? lots of functionality but have other equivalent
 ;; tools, like using Todoist because it's cross-platform (mobile)
-;; TODO: set up bookmarks to access common files/websites/folders quickly
 ;; TODO: look into how org-download works
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
