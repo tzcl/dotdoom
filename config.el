@@ -44,7 +44,6 @@
 ;;; UI
 
 (setq doom-font (font-spec :family "monospace" :size 14))
-(if (string= (system-name) "xps") (setq doom-font (font-spec :family "monospace" :size 16)))
 
 ;;
 ;;; Keybinds
