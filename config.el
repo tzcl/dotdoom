@@ -23,6 +23,8 @@
       doom-theme 'doom-monokai-pro
       display-line-numbers-type t
 
+      org-directory "~/gdrive/sci/org"
+
       mode-line-default-help-echo nil
       show-help-function nil)
 
