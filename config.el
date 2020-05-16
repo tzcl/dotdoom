@@ -5,6 +5,7 @@
 
 ;; TODO: set up key bindings for LSP mode, learn to use more effectively
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
+;; TODO: writeroom mode doesn't work with multiple buffers (delete the others and restore)?
 
 ;;; Org
 ;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
@@ -125,6 +126,9 @@
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
         org-ellipsis " ▼ "
+
+        org-journal-file-type 'weekly
+
         org-file-apps (butlast org-file-apps)
         org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
                                               ("\\.png\\'" . "sxiv %s")
