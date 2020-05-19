@@ -5,7 +5,8 @@
 
 ;; TODO: set up key bindings for LSP mode, learn to use more effectively
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
-;; TODO: writeroom mode doesn't work with multiple buffers (delete the others and restore)?
+;; TODO: writeroom mode doesn't work with multiple buffers (delete the others
+;; and restore)? Look into persp
 
 ;;; Org
 ;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
@@ -13,8 +14,6 @@
 ;; tools, like using Todoist because it's cross-platform (mobile)
 ;; TODO: look into how org-download works
 
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets.
 (setq user-full-name "Toby Law"
       user-mail-address "toby@tzcl.me"
 
@@ -36,10 +35,11 @@
 ;; Make focus mode work with paragraphs
   (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph))))
 
-;; Define paragraphs in text-mode to include lists
+;; Define paragraphs in text-mode to include lists (and make sure auto-fill is enabled)
 (defun toby/text-mode-hook ()
   (setq paragraph-start "^\n")
-  (setq paragraph-separate "\n\n"))
+  (setq paragraph-separate "\n\n")
+  (auto-fill-mode 1))
 (add-hook 'text-mode-hook #'toby/text-mode-hook)
 
 (defun toby/toggle-minor-mode (mode)
@@ -70,8 +70,9 @@
       ;; :mnv "SPC m d" 'toby/img-complete-link breaks org-capture keybindings
       ;; :ei "M-SPC m d" 'toby/img-complete-link
 
-      :mnv "SPC m D" 'org-deadline
-      :ei "M-SPC m D" 'org-deadline)
+      ;; :mnv "SPC m D" 'org-deadline
+      ;; :ei "M-SPC m D" 'org-deadline)
+      )
 
 ;;
 ;;; Modules
