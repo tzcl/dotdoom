@@ -13,6 +13,7 @@
 ;; TODO: set up org agenda? lots of functionality but have other equivalent
 ;; tools, like using Todoist because it's cross-platform (mobile)
 ;; TODO: look into how org-download works
+;; TODO: focus-mode not working properly with lists, look at paragraph definition
 
 (setq user-full-name "Toby Law"
       user-mail-address "toby@tzcl.me"
@@ -38,12 +39,11 @@
 ;; Define paragraphs in text-mode to include lists (and make sure auto-fill is enabled)
 (defun toby/text-mode-hook ()
   (setq paragraph-start "^\n")
-  (setq paragraph-separate "\n\n")
-  (auto-fill-mode 1))
+  (setq paragraph-separate "\n\n"))
 (add-hook 'text-mode-hook #'toby/text-mode-hook)
 
-(defun toby/toggle-minor-mode (mode)
-  (if (symbol-value mode) (funcall (symbol-function mode) 0) (funcall (symbol-function mode) 1)))
+;; Enable auto-fill-mode everywhere
+(auto-fill-mode 1)
 
 ;;
 ;;; UI
@@ -88,17 +88,17 @@
   #'flyspell-mode)
 (defun toby/flyspell-mode ()
   (interactive)
-  (toby/toggle-minor-mode 'flyspell-mode)
+  (flyspell-mode 'toggle)
   (if flyspell-mode (flyspell-buffer)))
 
 ;;; zen-mode
 ;; Clean up zen-mode
 (defun toby/writeroom-mode-hook ()
-  (toby/toggle-minor-mode 'display-line-numbers-mode)
-  (toby/toggle-minor-mode 'hl-line-mode)
-  (toby/toggle-minor-mode 'visual-line-mode)
-  (toby/toggle-minor-mode 'company-mode)
-  (toby/toggle-minor-mode 'focus-mode))
+  (display-line-numbers-mode 'toggle)
+  (hl-line-mode 'toggle)
+  (visual-line-mode 'toggle)
+  (company-mode 'toggle)
+  (focus-mode 'toggle))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
 ;; Set transparency in Emacs so writeroom can restore it
