@@ -7,6 +7,7 @@
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
 ;; TODO: writeroom mode doesn't work with multiple buffers (delete the others
 ;; and restore)? Look into persp
+;; TODO: set up deft/zettelkasten/personal wiki
 ;; TODO: focus-mode not working properly with lists, look at paragraph definition
 
 ;;; Org
@@ -39,11 +40,9 @@
 ;; Define paragraphs in text-mode to include lists (and make sure auto-fill is enabled)
 (defun toby/text-mode-hook ()
   (setq paragraph-start "^\n")
-  (setq paragraph-separate "\n\n"))
+  (setq paragraph-separate "\n[[:space:]]*\n")
+  (auto-fill-mode 1))
 (add-hook 'text-mode-hook #'toby/text-mode-hook)
-
-;; Enable auto-fill-mode everywhere
-(auto-fill-mode 1)
 
 ;;
 ;;; UI
