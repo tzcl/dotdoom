@@ -7,13 +7,13 @@
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
 ;; TODO: writeroom mode doesn't work with multiple buffers (delete the others
 ;; and restore)? Look into persp
+;; TODO: focus-mode not working properly with lists, look at paragraph definition
 
 ;;; Org
 ;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
 ;; TODO: set up org agenda? lots of functionality but have other equivalent
 ;; tools, like using Todoist because it's cross-platform (mobile)
-;; TODO: look into how org-download works
-;; TODO: focus-mode not working properly with lists, look at paragraph definition
+;; TODO: look into how org-download works (what's the best way to insert images into org-mode)
 
 (setq user-full-name "Toby Law"
       user-mail-address "toby@tzcl.me"
@@ -62,17 +62,13 @@
 
 (map! :leader
       "t s" 'toby/flyspell-mode
-      "f i" 'toby/find-index)
+      "f i" 'toby/find-index
+
+      :mnv "p O" 'projectile-find-other-file-other-window)
 
 (map! :map org-mode-map
       :mnv "SPC m h" 'toby/org-toggle-headings
-      :ei "M-SPC m h" 'toby/org-toggle-headings
-      ;; :mnv "SPC m d" 'toby/img-complete-link breaks org-capture keybindings
-      ;; :ei "M-SPC m d" 'toby/img-complete-link
-
-      ;; :mnv "SPC m D" 'org-deadline
-      ;; :ei "M-SPC m D" 'org-deadline)
-      )
+      :ei "M-SPC m h" 'toby/org-toggle-headings)
 
 ;;
 ;;; Modules
