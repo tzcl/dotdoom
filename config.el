@@ -39,9 +39,8 @@
 
 ;; Define paragraphs in text-mode to include lists (and make sure auto-fill is enabled)
 (defun toby/text-mode-hook ()
-  (setq paragraph-start "^\n")
-  (setq paragraph-separate "\n[[:space:]]*\n")
-  (auto-fill-mode 1))
+  (setq paragraph-start "\f\\|[ \t]*$")
+  (setq paragraph-separate "^[ \t\f]*$"))
 (add-hook 'text-mode-hook #'toby/text-mode-hook)
 
 ;;
