@@ -96,7 +96,7 @@
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
 ;; Set transparency in Emacs so writeroom can restore it
-(add-to-list 'default-frame-alist '(alpha 95 85))
+(add-to-list 'default-frame-alist '(alpha 95 95))
 
 ;;; doom-dashboard
 ;; Add index.org
