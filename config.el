@@ -7,8 +7,7 @@
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
 ;; TODO: writeroom mode doesn't work with multiple buffers (delete the others
 ;; and restore)? Look into persp
-;; TODO: set up deft/zettelkasten/personal wiki
-;; TODO: focus-mode not working properly with lists, look at paragraph definition
+;; TODO: set up org-roam (see workflows)
 
 ;;; Org
 ;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
