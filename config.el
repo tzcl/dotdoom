@@ -37,11 +37,15 @@
 ;; Make focus mode work with paragraphs
   (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph))))
 
-;; Define paragraphs in text-mode to include lists (and make sure auto-fill is enabled)
+;; Define paragraphs in text-mode to include lists
 (defun toby/text-mode-hook ()
   (setq paragraph-start "\f\\|[ \t]*$")
-  (setq paragraph-separate "^[ \t\f]*$"))
+  (setq paragraph-separate "^[ \t\f]*$")
+  (auto-fill-mode 1))
 (add-hook 'text-mode-hook #'toby/text-mode-hook)
+
+;; Ensure auto-fill-mode is on
+(setq-default auto-fill-function 'do-auto-fill)
 
 ;;
 ;;; UI
