@@ -5,8 +5,6 @@
 
 ;; TODO: set up key bindings for LSP mode, learn to use more effectively
 ;; TODO: set up bookmarks to access common files/websites/folders quickly
-;; TODO: writeroom mode doesn't work with multiple buffers (delete the others
-;; and restore)? Look into persp
 ;; TODO: set up org-roam (see workflows)
 
 ;;; Org
@@ -74,11 +72,26 @@
 
 ;;; zen-mode
 ;; Clean up zen-mode
+(setq writeroom-windows nil)
+(defun store-writeroom-windows ()
+  (setq writeroom-windows (current-window-configuration)))
+(defun restore-writeroom-windows ()
+  (set-window-configuration writeroom-windows))
 (defun toby/writeroom-mode-hook ()
-  (display-line-numbers-mode 'toggle)
-  (hl-line-mode 'toggle)
-  (company-mode 'toggle)
-  (focus-mode 'toggle))
+  (if writeroom-mode
+      (progn
+        (store-writeroom-windows)
+        (delete-other-windows)
+        (display-line-numbers-mode 'toggle)
+        (hl-line-mode 'toggle)
+        (company-mode 'toggle)
+        (focus-mode 'toggle))
+    (progn
+      (restore-writeroom-windows)
+      (display-line-numbers-mode 'toggle)
+      (hl-line-mode 'toggle)
+      (company-mode 'toggle)
+      (focus-mode 'toggle))))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
 ;; Set transparency in Emacs so writeroom can restore it
