@@ -40,7 +40,10 @@
 (defun toby/text-mode-hook ()
   (setq paragraph-start "\f\\|[ \t]*$")
   (setq paragraph-separate "^[ \t\f]*$"))
-(add-hook! 'text-mode-hook #'(toby/text-mode-hook turn-on-auto-fill))
+(add-hook! 'text-mode-hook 'toby/text-mode-hook)
+
+;; Make long lines respect fill column
+(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
 
 ;;
 ;;; UI
@@ -74,7 +77,6 @@
 (defun toby/writeroom-mode-hook ()
   (display-line-numbers-mode 'toggle)
   (hl-line-mode 'toggle)
-  (visual-line-mode 'toggle)
   (company-mode 'toggle)
   (focus-mode 'toggle))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
