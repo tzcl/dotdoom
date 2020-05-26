@@ -61,7 +61,6 @@
       :v "DEL" 'evil-delete-char)
 
 (map! :leader
-      "t s" 'toby/flyspell-mode
       "f i" 'toby/find-index
 
       :mnv "p O" 'projectile-find-other-file-other-window)
@@ -72,20 +71,6 @@
 
 ;;
 ;;; Modules
-
-;;; flyspell
-;; Disable by default
-(remove-hook! '(org-mode-hook
-                markdown-mode-hook
-                TeX-mode-hook
-                rst-mode-hook
-                mu4e-compose-mode-hook
-                message-mode-hook)
-  #'flyspell-mode)
-(defun toby/flyspell-mode ()
-  (interactive)
-  (flyspell-mode 'toggle)
-  (if flyspell-mode (flyspell-buffer)))
 
 ;;; zen-mode
 ;; Clean up zen-mode
@@ -125,6 +110,7 @@
         org-ellipsis " ▼ "
 
         org-journal-file-type 'weekly
+        org-journal-dir "~/gdrive/sci/org/journal/"
 
         org-file-apps (butlast org-file-apps)
         org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
