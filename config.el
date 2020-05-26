@@ -40,10 +40,7 @@
 (defun toby/text-mode-hook ()
   (setq paragraph-start "\f\\|[ \t]*$")
   (setq paragraph-separate "^[ \t\f]*$"))
-(add-hook 'text-mode-hook #'toby/text-mode-hook)
-
-;; Make sure auto-fill-mode is enabled
-(setq-default auto-fill-function 'do-auto-fill)
+(add-hook! 'text-mode-hook #'(toby/text-mode-hook turn-on-auto-fill))
 
 ;;
 ;;; UI
