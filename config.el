@@ -55,6 +55,27 @@
       :mnv "SPC m h" 'toby/org-toggle-headings
       :ei "M-SPC m h" 'toby/org-toggle-headings)
 
+(map! :leader (:prefix ("j" . "journal") ;; org-journal bindings
+        :desc "Create new journal entry" "j" #'org-journal-new-entry
+        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
+        :desc "Open next entry" "n" #'org-journal-open-next-entry
+        :desc "Search journal" "s" #'org-journal-search-forever))
+
+;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
+(map! :map calendar-mode-map
+      :n "o" #'org-journal-display-entry
+      :n "p" #'org-journal-previous-entry
+      :n "n" #'org-journal-next-entry
+      :n "O" #'org-journal-new-date-entry)
+(map! :map calendar-mode-map :localleader
+      "w" #'org-journal-search-calendar-week
+      "m" #'org-journal-search-calendar-month
+      "y" #'org-journal-search-calendar-year)
+(map! :map org-journal-search-mode-map
+      :n "j" #'org-journal-search-next
+      :n "k" #'org-journal-search-prev
+      :n "q" #'kill-this-buffer)
+
 ;;
 ;;; Modules
 
@@ -94,14 +115,16 @@
       evil-vsplit-window-right t)
 
 ;;; org
-;; TODO fix up org preview latex
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
         org-ellipsis " ▼ "
+        org-hide-emphasis-markers t
+        org-pretty-entities t
 
         org-journal-file-type 'weekly
         org-journal-dir "~/gdrive/sci/org/journal/"
+
         org-file-apps (butlast org-file-apps)
         org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
                                               ("\\.png\\'" . "sxiv %s")
@@ -127,14 +150,6 @@
 (defun toby/org-toggle-headings ()
   (interactive)
   (org-toggle-heading (org-current-level)))
-
-;; Automatically preview latex equations
-(defun toby/auto-toggle-equation ()
-  (when (looking-back (rx "$ "))
-    (save-excursion
-      (backward-char 1)
-      (org-toggle-latex-fragment))))
-(add-hook 'org-mode-hook (lambda () (add-hook 'post-self-insert-hook #'toby/auto-toggle-equation 'append 'local)))
 
 (defun toby/create-image-with-background-color (args)
   "Specify background color of Org-mode inline image through modify `ARGS'."
