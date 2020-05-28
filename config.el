@@ -102,13 +102,23 @@
 
         org-journal-file-type 'weekly
         org-journal-dir "~/gdrive/sci/org/journal/"
-
         org-file-apps (butlast org-file-apps)
         org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
                                               ("\\.png\\'" . "sxiv %s")
                                               ("\\.jpg\\'" . "sxiv %s")
                                               ("\\.jpeg\\'" . "sxiv %s")
-                                              ("\\.gif\\'" . "sxiv %s")))))
+                                              ("\\.gif\\'" . "sxiv %s"))))
+
+  (defun +org-update-latex-preview-background-color (&rest _)
+    (setq-default
+     org-format-latex-options
+     (plist-put org-format-latex-options
+                :background
+                (face-attribute (or (cadr (assq 'default face-remapping-alist))
+                                    'default)
+                                :background nil t))))
+  (add-hook 'solaire-mode-hook #'+org-update-latex-preview-background-color)
+  )
 ;; Turn leading stars into spaces
 (after! org-superstar
   (setq org-superstar-leading-bullet ?\s))
@@ -126,11 +136,26 @@
       (org-toggle-latex-fragment))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'post-self-insert-hook #'toby/auto-toggle-equation 'append 'local)))
 
+(defun toby/create-image-with-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; get this return result style from `create-image'
+    (append (list file type data-p)
+            (list :background (face-attribute (or (cadr (assq 'default face-remapping-alist))
+                                                  'default)
+                                              :background nil t))
+            props)))
+(advice-add 'create-image :filter-args #'toby/create-image-with-background-color)
+
 (defun toby/clean-org-latex-cache ()
   (interactive)
   (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*"))
 
 ;; Shortcut to insert images
+;; TODO: see how org-download works, replace this with that?
 (defvar img-d "~/gdrive/misc/img")
 (defun toby/img-complete-link ()
   "Create an image link using completion."
