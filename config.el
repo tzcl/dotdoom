@@ -40,9 +40,6 @@
   (setq paragraph-separate "^[ \t\f]*$"))
 (add-hook! 'text-mode-hook 'toby/text-mode-hook)
 
-;; Make long lines respect fill column
-(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-
 ;;
 ;;; UI
 
@@ -52,10 +49,9 @@
 ;;; Keybinds
 
 (map! "C-'" 'better-comment-dwim
-      "C-x n" 'narrow-or-widen-dwim
-
       :mnv "g D" 'xref-find-definitions-other-window
-
+      :mnv "$" 'evil-end-of-line
+      :mnv "g $" 'evil-end-of-visual-line
       :v "DEL" 'evil-delete-char)
 
 (map! :leader
@@ -77,6 +73,7 @@
   (setq writeroom-windows (current-window-configuration)))
 (defun restore-writeroom-windows ()
   (set-window-configuration writeroom-windows))
+;; TODO clean this up
 (defun toby/writeroom-mode-hook ()
   (if writeroom-mode
       (progn
@@ -97,14 +94,9 @@
 ;; Set transparency in Emacs so writeroom can restore it
 (add-to-list 'default-frame-alist '(alpha 95 95))
 
-;;; doom-dashboard
-;; Add index.org
-(defun toby/find-index ()
-  (interactive)
-  (find-file "/home/toby/gdrive/index.org"))
-(add-to-list '+doom-dashboard-menu-sections '("Open index"
-                                              :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
-                                              :action toby/find-index) t)
+;;; projectile
+(when (string-match "-[Mm]icrosoft" operating-system-release)
+  (setq projectile-indexing-method 'native))
 
 ;;; lookup
 ;; Add cppreference to +lookup/online
@@ -116,6 +108,7 @@
       evil-vsplit-window-right t)
 
 ;;; org
+;; TODO fix up org preview latex
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
@@ -185,28 +178,3 @@
           (progn
             (comment-or-uncomment-region $lbp $lep)
             (forward-line )))))))
-
-;; Better narrowing and widening
-(defun narrow-or-widen-dwim (p)
-  "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or defun,
-whichever applies first. Narrowing to org-src-block actually
-calls `org-edit-src-code'. With prefix P, don't widen, just
-narrow even if buffer is already narrowed."
-  (interactive "P")
-  (declare (interactive-only))
-  (cond ((and (buffer-narrowed-p) (not p)) (widen))
-        ((region-active-p)
-         (narrow-to-region (region-beginning)
-                           (region-end)))
-        ((derived-mode-p 'org-mode)
-         ;; `org-edit-src-code' is not a real narrowing
-         ;; command. Remove this first conditional if
-         ;; you don't want it.
-         (cond ((ignore-errors (org-edit-src-code) t)
-                (delete-other-windows))
-               ((ignore-errors (org-narrow-to-block) t))
-               (t (org-narrow-to-subtree))))
-        ((derived-mode-p 'latex-mode)
-         (LaTeX-narrow-to-environment))
-        (t (narrow-to-defun))))
