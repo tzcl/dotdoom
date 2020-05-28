@@ -122,7 +122,8 @@
         org-hide-emphasis-markers t
         org-pretty-entities t
 
-        org-journal-file-type 'weekly
+        org-journal-file-format "%Y-%m-%d"
+        org-journal-file-type 'monthly
         org-journal-dir "~/gdrive/org/journal/"
 
         org-file-apps (butlast org-file-apps)
@@ -132,9 +133,8 @@
                                               ("\\.jpeg\\'" . "sxiv %s")
                                               ("\\.gif\\'" . "sxiv %s"))))
 
-  (setq org-capture-templates
-        `(("i" "inbox" entry (file ,(concat org-directory "inbox.org")) "* TODO %?")
-          ("l" "link" entry (file ,(concat org-directory "inbox.org")) "* TODO %(org-cliplink-capture)" :immediate-finish t)))
+  (setq org-capture-templates '(("i" "Inbox" entry (file "~/gdrive/org/inbox.org") "* TODO %?\n")
+                               ("l" "Link" entry (file "~/gdrive/org/inbox.org") "* TODO %(org-cliplink-capture)\n" :immediate-finish t)))
 
   (defun +org-update-latex-preview-background-color (&rest _)
     (setq-default
