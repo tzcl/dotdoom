@@ -14,7 +14,7 @@
       doom-theme 'doom-monokai-pro
       display-line-numbers-type t
 
-      org-directory "~/gdrive/sci/org"
+      org-directory "~/gdrive/org/"
 
       mode-line-default-help-echo nil
       show-help-function nil)
@@ -123,7 +123,7 @@
         org-pretty-entities t
 
         org-journal-file-type 'weekly
-        org-journal-dir "~/gdrive/sci/org/journal/"
+        org-journal-dir "~/gdrive/org/journal/"
 
         org-file-apps (butlast org-file-apps)
         org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
@@ -131,6 +131,10 @@
                                               ("\\.jpg\\'" . "sxiv %s")
                                               ("\\.jpeg\\'" . "sxiv %s")
                                               ("\\.gif\\'" . "sxiv %s"))))
+
+  (setq org-capture-templates
+        `(("i" "inbox" entry (file ,(concat org-directory "inbox.org")) "* TODO %?")
+          ("l" "link" entry (file ,(concat org-directory "inbox.org")) "* TODO %(org-cliplink-capture)" :immediate-finish t)))
 
   (defun +org-update-latex-preview-background-color (&rest _)
     (setq-default
