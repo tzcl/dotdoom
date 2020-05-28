@@ -3,14 +3,6 @@
 ;;
 ;;; TODO
 
-;; TODO: set up key bindings for LSP mode, learn to use more effectively
-;; TODO: set up bookmarks to access common files/websites/folders quickly
-;; TODO: set up org-roam (see workflows)
-
-;;; Org
-;; TODO: set up org-capture templates (writing ideas, video ideas, ??)
-;; TODO: set up org agenda? lots of functionality but have other equivalent
-;; tools, like using Todoist because it's cross-platform (mobile)
 ;; TODO: look into how org-download works (what's the best way to insert images into org-mode)
 
 (setq user-full-name "Toby Law"
@@ -69,26 +61,20 @@
 ;;; zen-mode
 ;; Clean up zen-mode
 (setq writeroom-windows nil)
-(defun store-writeroom-windows ()
-  (setq writeroom-windows (current-window-configuration)))
-(defun restore-writeroom-windows ()
-  (set-window-configuration writeroom-windows))
-;; TODO clean this up
+(setq need-to-restore? nil)
 (defun toby/writeroom-mode-hook ()
+  (display-line-numbers-mode 'toggle)
+  (hl-line-mode 'toggle)
+  (company-mode 'toggle)
+  (focus-mode 'toggle)
   (if writeroom-mode
-      (progn
-        (store-writeroom-windows)
-        (delete-other-windows)
-        (display-line-numbers-mode 'toggle)
-        (hl-line-mode 'toggle)
-        (company-mode 'toggle)
-        (focus-mode 'toggle))
-    (progn
-      (restore-writeroom-windows)
-      (display-line-numbers-mode 'toggle)
-      (hl-line-mode 'toggle)
-      (company-mode 'toggle)
-      (focus-mode 'toggle))))
+      (when (not (one-window-p))
+        (setq need-to-restore? 't)
+        (setq writeroom-windows (current-window-configuration))
+        (delete-other-windows))
+    (when need-to-restore?
+      (set-window-configuration writeroom-windows)
+      (setq need-to-restore? nil))))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
 
 ;; Set transparency in Emacs so writeroom can restore it
@@ -132,19 +118,6 @@
   (interactive)
   (org-toggle-heading (org-current-level)))
 
-;; Make image backgrounds match the background colour
-(defun toby/create-image-with-background-color (args)
-  "Specify background color of Org-mode inline image through modify `ARGS'."
-  (let* ((file (car args))
-         (type (cadr args))
-         (data-p (caddr args))
-         (props (cdddr args)))
-    ;; get this return result style from `create-image'
-    (append (list file type data-p)
-            (list :background (face-background 'default))
-            props)))
-(advice-add 'create-image :filter-args #'toby/create-image-with-background-color)
-
 ;; Automatically preview latex equations
 (defun toby/auto-toggle-equation ()
   (when (looking-back (rx "$ "))
@@ -152,6 +125,10 @@
       (backward-char 1)
       (org-toggle-latex-fragment))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'post-self-insert-hook #'toby/auto-toggle-equation 'append 'local)))
+
+(defun toby/clean-org-latex-cache ()
+  (interactive)
+  (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*"))
 
 ;; Shortcut to insert images
 (defvar img-d "~/gdrive/misc/img")
