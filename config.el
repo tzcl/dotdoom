@@ -133,8 +133,8 @@
                                               ("\\.jpeg\\'" . "sxiv %s")
                                               ("\\.gif\\'" . "sxiv %s"))))
 
-  (setq org-capture-templates '(("i" "Inbox" entry (file "~/gdrive/org/inbox.org") "* TODO %?\n")
-                               ("l" "Link" entry (file "~/gdrive/org/inbox.org") "* TODO %(org-cliplink-capture)\n" :immediate-finish t)))
+  (setq org-capture-templates '(("i" "Inbox" entry (file "~/gdrive/org/inbox.org") "* TODO %?" :empty-lines 1)
+                               ("l" "Link" entry (file "~/gdrive/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
 
   (defun +org-update-latex-preview-background-color (&rest _)
     (setq-default
