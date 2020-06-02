@@ -32,6 +32,9 @@
   (setq paragraph-separate "^[ \t\f]*$"))
 (add-hook! 'text-mode-hook 'toby/text-mode-hook)
 
+;; Enable visual-line-mode by default
+(global-visual-line-mode t)
+
 ;;
 ;;; UI
 
