@@ -128,6 +128,7 @@
         org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
         org-journal-dir "~/gdrive/org/journal/"
+        org-journal-file-header "#+TITLE: %B %Y\n\n"
 
         org-file-apps (butlast org-file-apps)
         org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
