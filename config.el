@@ -31,6 +31,7 @@
 (add-hook! 'prog-mode-hook 'turn-on-visual-line-mode)
 
 ;; Enable visual-fill-column in text modes
+(require 'visual-fill-column)
 (add-hook! 'text-mode-hook 'turn-on-visual-fill-column-mode)
 
 ;;
