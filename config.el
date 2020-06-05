@@ -1,10 +1,5 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-;;
-;;; TODO
-
-;; TODO: look into how org-download works (what's the best way to insert images into org-mode)
-
 (setq user-full-name "Toby Law"
       user-mail-address "toby@tzcl.me"
 
@@ -32,8 +27,11 @@
   (setq paragraph-separate "^[ \t\f]*$"))
 (add-hook! 'text-mode-hook 'toby/text-mode-hook)
 
-;; Enable visual-line-mode by default
-(global-visual-line-mode t)
+;; Enable visual-line-mode in programming modes
+(add-hook! 'prog-mode-hook 'turn-on-visual-line-mode)
+
+;; Enable visual-fill-column in text modes
+(add-hook! 'text-mode-hook 'turn-on-visual-fill-column-mode)
 
 ;;
 ;;; UI
