@@ -21,19 +21,6 @@
 ;; Make focus mode work with paragraphs
   (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph))))
 
-;; Define paragraphs in text-mode to include lists
-(defun toby/text-mode-hook ()
-  (setq paragraph-start "\f\\|[ \t]*$")
-  (setq paragraph-separate "^[ \t\f]*$"))
-(add-hook! 'text-mode-hook 'toby/text-mode-hook)
-
-;; Enable visual-line-mode in programming modes
-(add-hook! 'prog-mode-hook 'turn-on-visual-line-mode)
-
-;; Enable visual-fill-column in text modes
-(require 'visual-fill-column)
-(add-hook! 'text-mode-hook 'turn-on-visual-fill-column-mode)
-
 ;;
 ;;; UI
 
@@ -57,12 +44,6 @@
       :mnv "SPC m h" 'toby/org-toggle-headings
       :ei "M-SPC m h" 'toby/org-toggle-headings)
 
-(map! :leader (:prefix ("j" . "journal") ;; org-journal bindings
-        :desc "Create new journal entry" "j" #'org-journal-new-entry
-        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
-        :desc "Open next entry" "n" #'org-journal-open-next-entry
-        :desc "Search journal" "s" #'org-journal-search-forever))
-
 ;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
 (map! :map calendar-mode-map
       :n "o" #'org-journal-display-entry
@@ -80,6 +61,20 @@
 
 ;;
 ;;; Modules
+
+;; Define paragraphs in text-mode to include lists
+(defun toby/text-mode-hook ()
+  (setq paragraph-start "\f\\|[ \t]*$")
+  (setq paragraph-separate "^[ \t\f]*$"))
+(add-hook! 'text-mode-hook 'toby/text-mode-hook)
+
+;; Enable visual-line-mode in programming modes
+(add-hook! 'prog-mode-hook 'turn-on-visual-line-mode)
+
+;; Enable visual-fill-column in text modes
+(require 'visual-fill-column)
+(setq visual-fill-column-width 120)
+(add-hook! 'text-mode-hook 'turn-on-visual-line-mode 'turn-on-visual-fill-column-mode)
 
 ;;; zen-mode
 ;; Clean up zen-mode
