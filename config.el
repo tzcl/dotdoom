@@ -25,7 +25,7 @@
 ;;; UI
 
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14))
-(setq doom-variable-pitch-font (font-spec :family "ETBembo" :size 24))
+(setq doom-variable-pitch-font (font-spec :family "ETBembo"))
 
 ;;
 ;;; Keybinds
@@ -98,17 +98,9 @@
 
 ;; Fix up mixed-pitch
 (setq mixed-pitch-variable-pitch-cursor nil)
+(setq mixed-pitch-set-height 18)
 (after! mixed-pitch
-  (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces)
-  (defadvice! +zen--fix-scaled-fixed-pitch-faces-a (orig-fn &rest args)
-    :around #'mixed-pitch-mode
-    (cl-letf* ((old-face-remap-add-relative (symbol-function #'face-remap-add-relative))
-               ((symbol-function #'face-remap-add-relative)
-                (lambda (face &rest specs)
-                  (funcall old-face-remap-add-relative
-                           face (doom-plist-delete specs :height)))))
-      (apply orig-fn args))))
-
+  (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces))
 
 ;; Set transparency in Emacs so writeroom can restore it
 (add-to-list 'default-frame-alist '(alpha 95 95))
