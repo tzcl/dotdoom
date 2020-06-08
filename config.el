@@ -25,7 +25,7 @@
 ;;; UI
 
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14))
-(setq doom-variable-pitch-font (font-spec :family "ETBembo"))
+(setq doom-variable-pitch-font (font-spec :family "ETBembo" :size 18))
 
 ;;
 ;;; Keybinds
