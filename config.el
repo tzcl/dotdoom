@@ -128,7 +128,7 @@
 
         org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
-        org-journal-dir "~/gdrive/org/journal/"
+        org-journal-dir "~/mega/org/journal/"
         org-journal-file-header "#+TITLE: %B %Y\n\n"
 
         org-file-apps (butlast org-file-apps)
@@ -138,8 +138,8 @@
                                               ("\\.jpeg\\'" . "sxiv %s")
                                               ("\\.gif\\'" . "sxiv %s"))))
 
-  (setq org-capture-templates '(("i" "Inbox" entry (file "~/gdrive/org/inbox.org") "* TODO %?" :empty-lines 1)
-                               ("l" "Link" entry (file "~/gdrive/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
+  (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/inbox.org") "* TODO %?" :empty-lines 1)
+                               ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
 
   (defun +org-update-latex-preview-background-color (&rest _)
     (setq-default
@@ -180,7 +180,7 @@
 
 ;; Shortcut to insert images
 ;; TODO: see how org-download works, replace this with that?
-(defvar img-d "~/gdrive/misc/img")
+(defvar img-d "~/mega/misc/img")
 (defun toby/img-complete-link ()
   "Create an image link using completion."
   (interactive)
