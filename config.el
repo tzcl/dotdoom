@@ -9,7 +9,7 @@
       doom-theme 'doom-monokai-pro
       display-line-numbers-type t
 
-      org-directory "~/gdrive/org/"
+      org-directory "~/mega/org/"
 
       mode-line-default-help-echo nil
       show-help-function nil)
