@@ -197,3 +197,13 @@
           (progn
             (comment-or-uncomment-region $lbp $lep)
             (forward-line )))))))
+
+(defun toby/light-theme ()
+  (interactive)
+  (setq doom-theme 'doom-solarized-light)
+  (doom/reload-theme))
+
+(defun toby/dark-theme ()
+  (interactive)
+  (setq doom-theme 'doom-monokai-pro)
+  (doom/reload-theme))
