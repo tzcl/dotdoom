@@ -24,7 +24,7 @@
 ;;
 ;;; UI
 
-(setq doom-font (font-spec :family "monospace" :size 14))
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14))
 
 ;;
 ;;; Keybinds
@@ -36,7 +36,7 @@
       :v "DEL" 'evil-delete-char)
 
 (map! :leader
-      "f i" 'toby/find-index
+      "t w" (lambda () (interactive) (visual-fill-column-mode 'toggle))
 
       :mnv "p O" 'projectile-find-other-file-other-window)
 
