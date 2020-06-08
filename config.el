@@ -25,6 +25,7 @@
 ;;; UI
 
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14))
+(setq doom-variable-pitch-font (font-spec :family "ETBembo" :size 24))
 
 ;;
 ;;; Keybinds
@@ -72,8 +73,8 @@
 (add-hook! 'prog-mode-hook 'turn-on-visual-line-mode)
 
 ;; Enable visual-fill-column in text modes
+(setq visual-fill-column-width 90)
 (require 'visual-fill-column)
-(setq visual-fill-column-width 120)
 (add-hook! 'text-mode-hook 'turn-on-visual-line-mode 'turn-on-visual-fill-column-mode)
 
 ;;; zen-mode
@@ -94,6 +95,20 @@
       (set-window-configuration writeroom-windows)
       (setq need-to-restore? nil))))
 (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
+
+;; Fix up mixed-pitch
+(setq mixed-pitch-variable-pitch-cursor nil)
+(after! mixed-pitch
+  (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces)
+  (defadvice! +zen--fix-scaled-fixed-pitch-faces-a (orig-fn &rest args)
+    :around #'mixed-pitch-mode
+    (cl-letf* ((old-face-remap-add-relative (symbol-function #'face-remap-add-relative))
+               ((symbol-function #'face-remap-add-relative)
+                (lambda (face &rest specs)
+                  (funcall old-face-remap-add-relative
+                           face (doom-plist-delete specs :height)))))
+      (apply orig-fn args))))
+
 
 ;; Set transparency in Emacs so writeroom can restore it
 (add-to-list 'default-frame-alist '(alpha 95 95))
