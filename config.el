@@ -98,7 +98,7 @@
 
 ;; Fix up mixed-pitch
 (setq mixed-pitch-variable-pitch-cursor nil)
-(setq mixed-pitch-set-height 18)
+(setq mixed-pitch-set-height 144)
 (after! mixed-pitch
   (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces))
 
@@ -129,8 +129,9 @@
         org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
         org-journal-dir "~/mega/org/journal/"
-        org-journal-file-header "#+TITLE: %B %Y\n\n"
+        org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"
 
+        ;; TODO: review this, use pdf-tools?
         org-file-apps (butlast org-file-apps)
         org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
                                               ("\\.png\\'" . "sxiv %s")
@@ -139,18 +140,31 @@
                                               ("\\.gif\\'" . "sxiv %s"))))
 
   (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/inbox.org") "* TODO %?" :empty-lines 1)
-                               ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
+                                ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
 
-  (defun +org-update-latex-preview-background-color (&rest _)
+  (add-hook! 'org-mode-hook
+    (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
+    (writeroom-mode))
+
+(defun +org-update-latex-preview-background-color (&rest _)
     (setq-default
      org-format-latex-options
      (plist-put org-format-latex-options
                 :background
-                (face-attribute (or (cadr (assq 'default face-remapping-alist))
-                                    'default)
-                                :background nil t))))
-  (add-hook 'solaire-mode-hook #'+org-update-latex-preview-background-color)
-  )
+                (face-attribute 'solaire-default-face :background nil t))))
+(add-hook 'solaire-mode-hook #'+org-update-latex-preview-background-color)
+
+(defun toby/create-image-with-background-color (args)
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; get this return result style from `create-image'
+    (append (list file type data-p)
+            (list :background (face-attribute 'solaire-default-face :background nil t))
+            props)))
+(advice-add 'create-image :filter-args #'toby/create-image-with-background-color))
+
 ;; Turn leading stars into spaces
 (after! org-superstar
   (setq org-superstar-leading-bullet ?\s))
@@ -159,20 +173,6 @@
 (defun toby/org-toggle-headings ()
   (interactive)
   (org-toggle-heading (org-current-level)))
-
-(defun toby/create-image-with-background-color (args)
-  "Specify background color of Org-mode inline image through modify `ARGS'."
-  (let* ((file (car args))
-         (type (cadr args))
-         (data-p (caddr args))
-         (props (cdddr args)))
-    ;; get this return result style from `create-image'
-    (append (list file type data-p)
-            (list :background (face-attribute (or (cadr (assq 'default face-remapping-alist))
-                                                  'default)
-                                              :background nil t))
-            props)))
-(advice-add 'create-image :filter-args #'toby/create-image-with-background-color)
 
 (defun toby/clean-org-latex-cache ()
   (interactive)
@@ -208,7 +208,8 @@
 (defun toby/light-theme ()
   (interactive)
   (setq doom-theme 'doom-solarized-light)
-  (doom/reload-theme))
+  (doom/reload-theme)
+  (set-face-attribute 'font-lock-comment-face nil :slant 'unspecified))
 
 (defun toby/dark-theme ()
   (interactive)
