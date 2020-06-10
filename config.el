@@ -102,9 +102,6 @@
 (after! mixed-pitch
   (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces))
 
-;; Set transparency in Emacs so writeroom can restore it
-(add-to-list 'default-frame-alist '(alpha 95 95))
-
 ;;; projectile
 (when (string-match "-[Mm]icrosoft" operating-system-release)
   (setq projectile-indexing-method 'native))
@@ -130,14 +127,6 @@
         org-journal-file-type 'monthly
         org-journal-dir "~/mega/org/journal/"
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"
-
-        ;; TODO: review this, use pdf-tools?
-        org-file-apps (butlast org-file-apps)
-        org-file-apps (append org-file-apps '(("\\.pdf::\\([0-9]+\\)\\'" . "zathura -P %1 %s")
-                                              ("\\.png\\'" . "sxiv %s")
-                                              ("\\.jpg\\'" . "sxiv %s")
-                                              ("\\.jpeg\\'" . "sxiv %s")
-                                              ("\\.gif\\'" . "sxiv %s"))))
 
   (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/inbox.org") "* TODO %?" :empty-lines 1)
                                 ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
