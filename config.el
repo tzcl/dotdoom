@@ -126,7 +126,7 @@
         org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
         org-journal-dir "~/mega/org/journal/"
-        org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"
+        org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n")
 
   (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/inbox.org") "* TODO %?" :empty-lines 1)
                                 ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
@@ -151,7 +151,7 @@
     (append (list file type data-p)
             (list :background (face-attribute 'solaire-default-face :background nil t))
             props)))
-(advice-add 'create-image :filter-args #'toby/fix-image-with-background-color)))
+(advice-add 'create-image :filter-args #'toby/fix-image-with-background-color))
 
 ;; Turn leading stars into spaces
 (after! org-superstar
