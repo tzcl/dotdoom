@@ -135,24 +135,23 @@
     (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
     (writeroom-mode))
 
-(defun +org-update-latex-preview-background-color (&rest _)
+(defun toby/fix-org-latex-preview-background-colour (&rest _)
     (setq-default
      org-format-latex-options
      (plist-put org-format-latex-options
                 :background
                 (face-attribute 'solaire-default-face :background nil t))))
-(add-hook 'solaire-mode-hook #'+org-update-latex-preview-background-color)
+(add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour)
 
-(defun toby/create-image-with-background-color (args)
+(defun toby/fix-image-background-color (args)
   (let* ((file (car args))
          (type (cadr args))
          (data-p (caddr args))
          (props (cdddr args)))
-    ;; get this return result style from `create-image'
     (append (list file type data-p)
             (list :background (face-attribute 'solaire-default-face :background nil t))
             props)))
-(advice-add 'create-image :filter-args #'toby/create-image-with-background-color))
+(advice-add 'create-image :filter-args #'toby/fix-image-with-background-color)))
 
 ;; Turn leading stars into spaces
 (after! org-superstar
