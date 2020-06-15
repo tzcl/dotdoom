@@ -170,6 +170,16 @@
   (interactive)
   (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*"))
 
+;; Allow pdf-tools to create images
+(after! pdf-view
+  (advice-remove 'create-image #'toby/fix-image-with-background-color))
+
+;; Fixing up dired
+(after! ranger
+  (setq ranger-override-dired 'ranger
+        ranger-listing-switches "-ahl -v"
+        ranger-parent-depth 2))
+
 ;; Shortcut to insert images
 ;; TODO: see how org-download works, replace this with that?
 (defvar img-d "~/mega/misc/img")
