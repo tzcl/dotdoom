@@ -121,12 +121,16 @@
         org-indent-mode-turns-on-hiding-stars nil
         org-ellipsis " ▼ "
         org-hide-emphasis-markers t
+
         org-pretty-entities t
 
         org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
         org-journal-dir "~/mega/org/journal/"
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n")
+
+  ;; Increase the number of lines that can be fontified
+  (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
 
   (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/inbox.org") "* TODO %?" :empty-lines 1)
                                 ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
