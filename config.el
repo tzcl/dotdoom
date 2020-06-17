@@ -100,6 +100,8 @@
 (setq mixed-pitch-variable-pitch-cursor nil)
 (setq mixed-pitch-set-height 144)
 (after! mixed-pitch
+  (add-to-list 'mixed-pitch-fixed-pitch-faces 'org-ellipsis)
+  ;; Faces to stop being mixed pitch
   (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces))
 
 ;;; projectile
