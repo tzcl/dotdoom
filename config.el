@@ -131,8 +131,6 @@
         org-ellipsis " ▼ "
         org-hide-emphasis-markers t
 
-        org-pretty-entities t
-
         org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
         org-journal-dir "~/mega/org/journal/"
