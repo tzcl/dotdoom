@@ -151,6 +151,33 @@
     (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
     (writeroom-mode))
 
+;; specify the justification you want
+(plist-put org-format-latex-options :justify 'center)
+
+(require 'ov)
+(defun org-justify-fragment-overlay (beg end image imagetype)
+  "Adjust the justification of a LaTeX fragment.
+The justification is set by :justify in
+`org-format-latex-options'. Only equations at the beginning of a
+line are justified."
+  (cond
+   ;; Centered justification
+   ((and (eq 'center (plist-get org-format-latex-options :justify))
+         (= beg (line-beginning-position)))
+    (let* ((img (create-image image 'png t))
+           (width (car (image-size img)))
+           (offset (floor (- (/ (window-text-width) 2) (/ width 2)))))
+      (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
+   ;; Right justification
+   ((and (eq 'right (plist-get org-format-latex-options :justify))
+         (= beg (line-beginning-position)))
+    (let* ((img (create-image image imagetype t))
+           (width (car (image-display-size (overlay-get (ov-at) 'display))))
+           (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
+      (overlay-put (ov-at) 'before-string (make-string offset ?\s))))))
+
+(advice-add 'org--make-preview-overlay :after 'org-justify-fragment-overlay)
+
 (defun toby/fix-org-latex-preview-background-colour (&rest _)
     (setq-default
      org-format-latex-options
@@ -167,7 +194,8 @@
     (append (list file type data-p)
             (list :background (face-attribute 'solaire-default-face :background nil t))
             props)))
-(advice-add 'create-image :filter-args #'toby/fix-image-with-background-color))
+;; (advice-add 'create-image :filter-args #'toby/fix-image-with-background-color))
+ )
 
 ;; Make org-toggle-headings nicer
 (defun toby/org-toggle-headings ()
