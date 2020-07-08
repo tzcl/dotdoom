@@ -128,6 +128,8 @@
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
+        org-superstar-leading-bullet ?\s
+
         org-ellipsis " ▼ "
         org-hide-emphasis-markers t
 
@@ -135,6 +137,9 @@
         org-journal-file-type 'monthly
         org-journal-dir "~/mega/org/journal/"
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n")
+
+  ;; HACK: solaire org has the wrong colour at start up (but is fine after swapping themes)
+  (set-face-attribute 'solaire-org-hide-face nil :foreground "#2D2A2E")
 
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
@@ -163,10 +168,6 @@
             (list :background (face-attribute 'solaire-default-face :background nil t))
             props)))
 (advice-add 'create-image :filter-args #'toby/fix-image-with-background-color))
-
-;; Turn leading stars into spaces
-(after! org-superstar
-  (setq org-superstar-leading-bullet ?\s))
 
 ;; Make org-toggle-headings nicer
 (defun toby/org-toggle-headings ()
@@ -275,3 +276,48 @@
   (interactive)
   (setq doom-theme 'doom-monokai-pro)
   (doom/reload-theme))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#2D2A2E" "#CC6666" "#A9DC76" "#FFD866" "#78DCE8" "#FF6188" "#78DCE8" "#FCFCFA"])
+ '(custom-safe-themes
+   '("425cf02839fa7c5ebd6cb11f8074f6b8463ae6ed3eeb4cf5a2b18ffc33383b0b" default))
+ '(fci-rule-color "#4C4A4D")
+ '(jdee-db-active-breakpoint-face-colors (cons "#19181A" "#FCFCFA"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#19181A" "#A9DC76"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#19181A" "#727072"))
+ '(objed-cursor-color "#CC6666")
+ '(pdf-view-midnight-colors (cons "#FCFCFA" "#2D2A2E"))
+ '(rustic-ansi-faces
+   ["#2D2A2E" "#CC6666" "#A9DC76" "#FFD866" "#78DCE8" "#FF6188" "#78DCE8" "#FCFCFA"])
+ '(vc-annotate-background "#2D2A2E")
+ '(vc-annotate-color-map
+   (list
+    (cons 20 "#A9DC76")
+    (cons 40 "#c5da70")
+    (cons 60 "#e2d96b")
+    (cons 80 "#FFD866")
+    (cons 100 "#fec266")
+    (cons 120 "#fdad66")
+    (cons 140 "#FC9867")
+    (cons 160 "#fd8572")
+    (cons 180 "#fe737d")
+    (cons 200 "#FF6188")
+    (cons 220 "#ee627c")
+    (cons 240 "#dd6471")
+    (cons 260 "#CC6666")
+    (cons 280 "#b56869")
+    (cons 300 "#9f6b6c")
+    (cons 320 "#886d6f")
+    (cons 340 "#4C4A4D")
+    (cons 360 "#4C4A4D")))
+ '(vc-annotate-very-old-color nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
