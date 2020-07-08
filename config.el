@@ -164,14 +164,14 @@ line are justified."
    ;; Centered justification
    ((and (eq 'center (plist-get org-format-latex-options :justify))
          (= beg (line-beginning-position)))
-    (let* ((img (create-image image 'png t))
+    (let* ((img (create-image image 'png))
            (width (car (image-size img)))
-           (offset (floor (- (/ (window-text-width) 2) (/ width 2)))))
+           (offset (floor (- (/ 160 2) (/ width 2)))))
       (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
    ;; Right justification
    ((and (eq 'right (plist-get org-format-latex-options :justify))
          (= beg (line-beginning-position)))
-    (let* ((img (create-image image imagetype t))
+    (let* ((img (create-image image 'png))
            (width (car (image-display-size (overlay-get (ov-at) 'display))))
            (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
       (overlay-put (ov-at) 'before-string (make-string offset ?\s))))))
@@ -184,18 +184,7 @@ line are justified."
      (plist-put org-format-latex-options
                 :background
                 (face-attribute 'solaire-default-face :background nil t))))
-(add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour)
-
-(defun toby/fix-image-background-color (args)
-  (let* ((file (car args))
-         (type (cadr args))
-         (data-p (caddr args))
-         (props (cdddr args)))
-    (append (list file type data-p)
-            (list :background (face-attribute 'solaire-default-face :background nil t))
-            props)))
-;; (advice-add 'create-image :filter-args #'toby/fix-image-with-background-color))
- )
+(add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
 
 ;; Make org-toggle-headings nicer
 (defun toby/org-toggle-headings ()
