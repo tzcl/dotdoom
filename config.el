@@ -24,8 +24,13 @@
 ;;
 ;;; UI
 
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14))
-(setq doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14)
+      doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
+
+;; Make fonts bigger on Windows
+(when (string-match "-[Mm]icrosoft" operating-system-release)
+  (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 20)
+        doom-variable-pitch-font (font-spec :family "ETBembo" :size 24)))
 
 ;;
 ;;; Keybinds
@@ -138,6 +143,9 @@
         org-journal-dir "~/mega/org/journal/"
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n")
 
+  (when (string-match "-[Mm]icrosoft" operating-system-release)
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.75))
+
   ;; HACK: solaire org has the wrong colour at start up (but is fine after swapping themes)
   (set-face-attribute 'solaire-org-hide-face nil :foreground "#2D2A2E")
 
@@ -151,42 +159,42 @@
     (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
     (writeroom-mode))
 
-;; specify the justification you want
-(plist-put org-format-latex-options :justify 'center)
+  ;; specify the justification you want
+  (plist-put org-format-latex-options :justify 'center)
 
-(require 'ov)
-(defun org-justify-fragment-overlay (beg end image imagetype)
-  "Adjust the justification of a LaTeX fragment.
+  (require 'ov)
+  (defun org-justify-fragment-overlay (beg end image imagetype)
+    "Adjust the justification of a LaTeX fragment.
 The justification is set by :justify in
 `org-format-latex-options'. Only equations at the beginning of a
 line are justified."
-  (cond
-   ;; Centered justification
-   ((and (eq 'center (plist-get org-format-latex-options :justify))
-         (= beg (line-beginning-position)))
-    (let* ((img (create-image image 'png))
-           (width (car (image-size img)))
-           (offset (floor (- (/ 160 2) (/ width 2)))))
-      (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
-   ;; Right justification
-   ((and (eq 'right (plist-get org-format-latex-options :justify))
-         (= beg (line-beginning-position)))
-    (let* ((img (create-image image 'png))
-           (width (car (image-display-size (overlay-get (ov-at) 'display))))
-           (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
-      (overlay-put (ov-at) 'before-string (make-string offset ?\s))))))
+    (cond
+     ;; Centered justification
+     ((and (eq 'center (plist-get org-format-latex-options :justify))
+           (= beg (line-beginning-position)))
+      (let* ((img (create-image image 'png))
+             (width (car (image-size img)))
+             (offset (floor (- (/ 160 2) (/ width 2)))))
+        (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
+     ;; Right justification
+     ((and (eq 'right (plist-get org-format-latex-options :justify))
+           (= beg (line-beginning-position)))
+      (let* ((img (create-image image 'png))
+             (width (car (image-display-size (overlay-get (ov-at) 'display))))
+             (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
+        (overlay-put (ov-at) 'before-string (make-string offset ?\s))))))
 
-(advice-add 'org--make-preview-overlay :after 'org-justify-fragment-overlay)
+  (advice-add 'org--make-preview-overlay :after 'org-justify-fragment-overlay)
 
-(defun toby/fix-org-latex-preview-background-colour (&rest _)
+  (defun toby/fix-org-latex-preview-background-colour (&rest _)
     (setq-default
      org-format-latex-options
      (plist-put org-format-latex-options
                 :background
                 (face-attribute 'solaire-default-face :background nil t))))
-(add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
+  (add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
 
-;; Make org-toggle-headings nicer
+  ;; Make org-toggle-headings nicer
 (defun toby/org-toggle-headings ()
   (interactive)
   (org-toggle-heading (org-current-level)))
