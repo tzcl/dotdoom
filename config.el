@@ -10,6 +10,7 @@
       display-line-numbers-type t
 
       org-directory "~/mega/org/"
+      calendar-week-start-day 1
 
       mode-line-default-help-echo nil
       show-help-function nil)
@@ -71,6 +72,7 @@
 (defun toby/text-mode-hook ()
   (setq paragraph-start "\f\\|[ \t]*$")
   (setq paragraph-separate "^[ \t\f]*$"))
+
 (add-hook 'text-mode-hook #'toby/text-mode-hook)
 
 ;; Enable visual-line-mode in programming modes
@@ -115,6 +117,7 @@
       (when need-to-restore?
         (set-window-configuration writeroom-windows)
         (setq need-to-restore? nil))))
+
   (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook))
 
 (after! mixed-pitch
@@ -159,7 +162,6 @@ The justification is set by :justify in
 `org-format-latex-options'. Only equations at the beginning of a
 line are justified."
     (require 'ov)
-    ;; TODO: ignore imagetype? how can I use it? Test this
     (cond
      ;; Centered justification
      ((and (eq 'center (plist-get org-format-latex-options :justify))
@@ -167,7 +169,6 @@ line are justified."
       (let* ((img (create-image image (intern imagetype)))
              (width (car (image-size img)))
              (offset (floor (- (/ 160 2) (/ width 2)))))
-        (print imagetype)
         (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
      ;; Right justification
      ((and (eq 'right (plist-get org-format-latex-options :justify))
@@ -175,6 +176,7 @@ line are justified."
       (let* ((width (car (image-display-size (overlay-get (ov-at) 'display))))
              (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
         (overlay-put (ov-at) 'before-string (make-string offset ?\s))))))
+
   (advice-add 'org--make-preview-overlay :after 'org-justify-fragment-overlay)
 
 ;; Make org-toggle-headings nicer
@@ -195,7 +197,12 @@ line are justified."
         org-journal-dir "~/mega/org/journal/"
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"))
 
-;; TODO: org-gcal here
+(use-package! org-gcal
+  :config
+  (setq org-gcal-file-alist '(("tubby@gmail.com" . "~/mega/org/calendar.org")))
+
+  (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
+  (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch))
 
 (after! (:and solaire-mode org)
   ;; HACK: solaire org has the wrong colour at start up (but is fine after swapping themes)
@@ -210,6 +217,7 @@ line are justified."
      (plist-put org-format-latex-options
                 :background
                 (face-attribute 'solaire-default-face :background nil t))))
+
   (add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
 
 ;; Shortcut to insert images
