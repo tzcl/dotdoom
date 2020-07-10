@@ -160,14 +160,14 @@ The justification is set by :justify in
 line are justified."
     (require 'ov)
     ;; TODO: ignore imagetype? how can I use it? Test this
-    (ignore imagetype)
     (cond
      ;; Centered justification
      ((and (eq 'center (plist-get org-format-latex-options :justify))
            (= beg (line-beginning-position)))
-      (let* ((img (create-image image 'png))
+      (let* ((img (create-image image (intern imagetype)))
              (width (car (image-size img)))
              (offset (floor (- (/ 160 2) (/ width 2)))))
+        (print imagetype)
         (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
      ;; Right justification
      ((and (eq 'right (plist-get org-format-latex-options :justify))
