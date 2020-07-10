@@ -14,13 +14,6 @@
       mode-line-default-help-echo nil
       show-help-function nil)
 
-(use-package! focus
-  :config
-  ;; Initialise focus-mode to be off
-  (defvar focus-mode nil)
-;; Make focus mode work with paragraphs
-  (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph))))
-
 ;;
 ;;; UI
 
@@ -32,20 +25,26 @@
   (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 20)
         doom-variable-pitch-font (font-spec :family "ETBembo" :size 24)))
 
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+
 ;;
 ;;; Keybinds
 
+;; global
 (map! "C-'" 'better-comment-dwim
       :mnv "g D" 'xref-find-definitions-other-window
       :mnv "$" 'evil-end-of-line
       :mnv "g $" 'evil-end-of-visual-line
       :v "DEL" 'evil-delete-char)
 
+;; after SPC
 (map! :leader
       "t w" (lambda () (interactive) (visual-fill-column-mode 'toggle))
 
       :mnv "p O" 'projectile-find-other-file-other-window)
 
+;; in org-mode
 (map! :map org-mode-map
       :mnv "SPC m h" 'toby/org-toggle-headings
       :ei "M-SPC m h" 'toby/org-toggle-headings)
@@ -66,108 +65,102 @@
       :n "q" #'kill-this-buffer)
 
 ;;
-;;; Modules
-
-;; Sort filenames better
-;; This isn't getting called
-(after! ivy
-  (add-to-list
-   'ivy-sort-functions-alist
-   '(read-file-name-internal . toby/sort-filenames)))
+;;; Packages
 
 ;; Define paragraphs in text-mode to include lists
 (defun toby/text-mode-hook ()
   (setq paragraph-start "\f\\|[ \t]*$")
   (setq paragraph-separate "^[ \t\f]*$"))
-(add-hook! 'text-mode-hook 'toby/text-mode-hook)
+(add-hook 'text-mode-hook #'toby/text-mode-hook)
 
 ;; Enable visual-line-mode in programming modes
-(add-hook! 'prog-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'prog-mode-hook #'turn-on-visual-line-mode)
 
-;; Enable visual-fill-column in text modes
-(setq visual-fill-column-width 90)
-(require 'visual-fill-column)
-(add-hook! 'text-mode-hook 'turn-on-visual-line-mode 'turn-on-visual-fill-column-mode)
+;; Enable visual-fill-column in text mode
+(use-package! visual-fill-column
+  :hook (text-mode . visual-fill-column-mode)
+  :config
+  (setq visual-fill-column-width 90)
+  (turn-on-visual-line-mode))
 
-;;; zen-mode
-;; Clean up zen-mode
-(setq writeroom-windows nil)
-(setq need-to-restore? nil)
-(defun toby/writeroom-mode-hook ()
-  (display-line-numbers-mode 'toggle)
-  (hl-line-mode 'toggle)
-  (company-mode 'toggle)
-  (focus-mode 'toggle)
-  (if writeroom-mode
-      (when (not (one-window-p))
-        (setq need-to-restore? 't)
-        (setq writeroom-windows (current-window-configuration))
-        (delete-other-windows))
-    (when need-to-restore?
-      (set-window-configuration writeroom-windows)
-      (setq need-to-restore? nil))))
-(add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook)
+;; Sort filenames better
+(after! ivy
+  (add-to-list
+   'ivy-sort-functions-alist
+   '(read-file-name-internal . toby/sort-filenames)))
 
-;; Fix up mixed-pitch
-(setq mixed-pitch-variable-pitch-cursor nil)
-(setq mixed-pitch-set-height 144)
+;; Set up focus
+(use-package! focus
+  :config
+  ;; Initialise focus-mode to be off
+  (defvar focus-mode nil)
+  ;; Make focus mode work with paragraphs
+  (setq focus-mode-to-thing '((prog-mode . defun) (text-mode . paragraph))))
+
+;; Make writeroom-mode expand to take up the whole window
+(after! writeroom-mode
+  (setq writeroom-windows nil
+        need-to-restore? nil)
+
+  (defun toby/writeroom-mode-hook ()
+    (display-line-numbers-mode 'toggle)
+    (hl-line-mode 'toggle)
+    (company-mode 'toggle)
+    (focus-mode 'toggle)
+    (if writeroom-mode
+        (when (not (one-window-p))
+          (setq need-to-restore? 't)
+          (setq writeroom-windows (current-window-configuration))
+          (delete-other-windows))
+      (when need-to-restore?
+        (set-window-configuration writeroom-windows)
+        (setq need-to-restore? nil))))
+  (add-hook 'writeroom-mode-hook #'toby/writeroom-mode-hook))
+
 (after! mixed-pitch
+  ;; Mixed-pitch cursor doesn't work with evil
+  (setq mixed-pitch-variable-pitch-cursor nil
+        mixed-pitch-set-height 144)
+
+  ;; Make org-ellipsis the right size
   (add-to-list 'mixed-pitch-fixed-pitch-faces 'org-ellipsis)
   ;; Faces to stop being mixed pitch
   (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces))
 
-;;; projectile
-(when (string-match "-[Mm]icrosoft" operating-system-release)
-  (setq projectile-indexing-method 'native))
+(after! projectile
+  (when (string-match "-[Mm]icrosoft" operating-system-release)
+    (setq projectile-indexing-method 'native)))
 
-;;; lookup
-;; Add cppreference to +lookup/online
-(add-to-list '+lookup-provider-url-alist '("C++ Reference" "https://en.cppreference.com/mwiki/index.php?search=%s"))
+(after! lookup
+  ;; Add cppreference to +lookup/online
+  (add-to-list '+lookup-provider-url-alist '("C++ Reference" "https://en.cppreference.com/mwiki/index.php?search=%s")))
 
-;;; windows
-;; Switch to new window after splitting
-(setq evil-split-window-below t
-      evil-vsplit-window-right t)
-
-;;; org
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
-        org-superstar-leading-bullet ?\s
-
         org-ellipsis " ▼ "
-        org-hide-emphasis-markers t
-
-        org-journal-file-format "%Y-%m-%d"
-        org-journal-file-type 'monthly
-        org-journal-dir "~/mega/org/journal/"
-        org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n")
-
-  (when (string-match "-[Mm]icrosoft" operating-system-release)
-    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.75))
-
-  ;; HACK: solaire org has the wrong colour at start up (but is fine after swapping themes)
-  (set-face-attribute 'solaire-org-hide-face nil :foreground "#2D2A2E")
-
-  ;; Increase the number of lines that can be fontified
-  (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
+        org-hide-emphasis-markers t)
 
   (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/inbox.org") "* TODO %?" :empty-lines 1)
                                 ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
 
-  (add-hook! 'org-mode-hook
-    (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
-    (writeroom-mode))
+  ;; Increase the number of lines that can be fontified
+  (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
 
-  ;; specify the justification you want
+  ;; Org latex previews
+  (when (string-match "-[Mm]icrosoft" operating-system-release)
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.75)))
+
   (plist-put org-format-latex-options :justify 'center)
 
-  (require 'ov)
   (defun org-justify-fragment-overlay (beg end image imagetype)
     "Adjust the justification of a LaTeX fragment.
 The justification is set by :justify in
 `org-format-latex-options'. Only equations at the beginning of a
 line are justified."
+    (require 'ov)
+    ;; TODO: ignore imagetype? how can I use it? Test this
+    (ignore imagetype)
     (cond
      ;; Centered justification
      ((and (eq 'center (plist-get org-format-latex-options :justify))
@@ -179,12 +172,37 @@ line are justified."
      ;; Right justification
      ((and (eq 'right (plist-get org-format-latex-options :justify))
            (= beg (line-beginning-position)))
-      (let* ((img (create-image image 'png))
-             (width (car (image-display-size (overlay-get (ov-at) 'display))))
+      (let* ((width (car (image-display-size (overlay-get (ov-at) 'display))))
              (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
         (overlay-put (ov-at) 'before-string (make-string offset ?\s))))))
-
   (advice-add 'org--make-preview-overlay :after 'org-justify-fragment-overlay)
+
+;; Make org-toggle-headings nicer
+(defun toby/org-toggle-headings ()
+  (interactive)
+  (org-toggle-heading (org-current-level)))
+
+(defun toby/clean-org-latex-cache ()
+  (interactive)
+  (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
+
+(after! org-superstar
+  (setq org-superstar-leading-bullet ?\s))
+
+(after! org-journal
+  (setq org-journal-file-format "%Y-%m-%d"
+        org-journal-file-type 'monthly
+        org-journal-dir "~/mega/org/journal/"
+        org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"))
+
+;; TODO: org-gcal here
+
+(after! (:and solaire-mode org)
+  ;; HACK: solaire org has the wrong colour at start up (but is fine after swapping themes)
+  ;;(set-face-attribute 'solaire-org-hide-face nil :foreground "#2D2A2E")
+  (add-hook! 'org-mode-hook
+    (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
+    (writeroom-mode))
 
   (defun toby/fix-org-latex-preview-background-colour (&rest _)
     (setq-default
@@ -193,19 +211,6 @@ line are justified."
                 :background
                 (face-attribute 'solaire-default-face :background nil t))))
   (add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
-
-  ;; Make org-toggle-headings nicer
-(defun toby/org-toggle-headings ()
-  (interactive)
-  (org-toggle-heading (org-current-level)))
-
-(defun toby/clean-org-latex-cache ()
-  (interactive)
-  (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*"))
-
-;; Allow pdf-tools to create images
-(after! pdf-view
-  (advice-remove 'create-image #'toby/fix-image-with-background-color))
 
 ;; Shortcut to insert images
 ;; TODO: see how org-download works, replace this with that?
@@ -301,48 +306,3 @@ line are justified."
   (interactive)
   (setq doom-theme 'doom-monokai-pro)
   (doom/reload-theme))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#2D2A2E" "#CC6666" "#A9DC76" "#FFD866" "#78DCE8" "#FF6188" "#78DCE8" "#FCFCFA"])
- '(custom-safe-themes
-   '("425cf02839fa7c5ebd6cb11f8074f6b8463ae6ed3eeb4cf5a2b18ffc33383b0b" default))
- '(fci-rule-color "#4C4A4D")
- '(jdee-db-active-breakpoint-face-colors (cons "#19181A" "#FCFCFA"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#19181A" "#A9DC76"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#19181A" "#727072"))
- '(objed-cursor-color "#CC6666")
- '(pdf-view-midnight-colors (cons "#FCFCFA" "#2D2A2E"))
- '(rustic-ansi-faces
-   ["#2D2A2E" "#CC6666" "#A9DC76" "#FFD866" "#78DCE8" "#FF6188" "#78DCE8" "#FCFCFA"])
- '(vc-annotate-background "#2D2A2E")
- '(vc-annotate-color-map
-   (list
-    (cons 20 "#A9DC76")
-    (cons 40 "#c5da70")
-    (cons 60 "#e2d96b")
-    (cons 80 "#FFD866")
-    (cons 100 "#fec266")
-    (cons 120 "#fdad66")
-    (cons 140 "#FC9867")
-    (cons 160 "#fd8572")
-    (cons 180 "#fe737d")
-    (cons 200 "#FF6188")
-    (cons 220 "#ee627c")
-    (cons 240 "#dd6471")
-    (cons 260 "#CC6666")
-    (cons 280 "#b56869")
-    (cons 300 "#9f6b6c")
-    (cons 320 "#886d6f")
-    (cons 340 "#4C4A4D")
-    (cons 360 "#4C4A4D")))
- '(vc-annotate-very-old-color nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
