@@ -143,8 +143,9 @@
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
+        org-catch-invisible-edits 't
         org-ellipsis " ▼ "
-        org-hide-emphasis-markers t)
+        org-hide-emphasis-markers 't)
 
   (setq org-agenda-files `(,(concat org-agenda-dir "inbox.org")
                            ,(concat org-agenda-dir "next.org")
@@ -204,6 +205,11 @@ line are justified."
 (defun toby/org-toggle-headings ()
   (interactive)
   (org-toggle-heading (org-current-level)))
+
+(defun toby/org-archive-done-tasks ()
+    "Archive all done tasks."
+    (interactive)
+    (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
 (defun toby/clean-org-latex-cache ()
   (interactive)
@@ -267,7 +273,73 @@ line are justified."
   (defun toby/toggle-org-agenda ()
     (interactive)
     (if evil-org-agenda-mode (org-agenda-exit)
-      (org-agenda nil " "))))
+      (org-agenda nil " ")))
+
+  (defun toby/process-inbox ()
+    (interactive)
+    (org-agenda-bulk-mark-regexp "inbox:")
+    (toby/bulk-process-entries))
+
+  (defun toby/bulk-process-entries ()
+    (if (not (null org-agenda-bulk-marked-entries))
+        (let ((entries (reverse org-agenda-bulk-marked-entries))
+              (processed 0)
+              (skipped 0))
+          (dolist (e entries)
+            (let ((pos (text-property-any (point-min) (point-max) 'org-hd-marker e)))
+              (if (not pos)
+                  (progn (message "Skipping removed entry at %s" e)
+                         (cl-incf skipped))
+                (goto-char pos)
+                (let (org-loop-over-headlines-in-active-region) (funcall 'toby/org-agenda-process-inbox-item))
+                ;; `post-command-hook' is not run yet.  We make sure any
+                ;; pending log note is processed.
+                (when (or (memq 'org-add-log-note (default-value 'post-command-hook))
+                          (memq 'org-add-log-note post-command-hook))
+                  (org-add-log-note))
+                (cl-incf processed))))
+          (org-agenda-redo)
+          (unless org-agenda-persistent-marks (org-agenda-bulk-unmark-all))
+          (message "Acted on %d entries%s%s"
+                   processed
+                   (if (= skipped 0)
+                       ""
+                     (format ", skipped %d (disappeared before their turn)"
+                             skipped))
+                   (if (not org-agenda-persistent-marks) "" " (kept marked)")))))
+
+  (defun toby/org-agenda-process-inbox-item ()
+    (org-with-wide-buffer
+     (org-agenda-set-tags)
+     (org-agenda-priority)
+     (call-interactively 'toby/org-set-effort)
+     (org-agenda-refile nil nil t)))
+
+  (setq org-agenda-bulk-custom-functions '((?j toby/org-agenda-process-inbox-item)))
+
+  (defvar toby/org-current-effort "1:00")
+
+  (defun toby/org-set-effort (effort)
+    (interactive
+     (list (read-string (format "Effort [%s]: " toby/org-current-effort) nil nil toby/org-current-effort)))
+    (setq toby/org-current-effort effort)
+    (org-agenda-check-no-diary)
+    (let* ((hdmarker (or (org-get-at-bol 'org-hd-marker)
+                         (org-agenda-error)))
+           (buffer (marker-buffer hdmarker))
+           (pos (marker-position hdmarker))
+           (inhibit-read-only t)
+           newhead)
+      (org-with-remote-undo buffer
+        (with-current-buffer buffer
+          (widen)
+          (goto-char pos)
+          (org-show-context 'agenda)
+          (funcall-interactively 'org-set-effort nil toby/org-current-effort)
+          (end-of-line 1)
+          (setq newhead (org-get-heading)))
+        (org-agenda-change-all-lines newhead hdmarker))))
+  )
 
 (after! (:and solaire-mode org)
   (add-hook! 'org-mode-hook
