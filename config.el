@@ -10,6 +10,7 @@
       display-line-numbers-type t
 
       org-directory "~/mega/org/"
+      org-agenda-dir "~/mega/org/agenda/"
       calendar-week-start-day 1
 
       mode-line-default-help-echo nil
@@ -30,14 +31,15 @@
       evil-split-window-below t)
 
 ;;
-;;; Keybinds
+;;; Keybindings
 
 ;; global
 (map! "C-'" 'better-comment-dwim
       :mnv "g D" 'xref-find-definitions-other-window
       :mnv "$" 'evil-end-of-line
       :mnv "g $" 'evil-end-of-visual-line
-      :v "DEL" 'evil-delete-char)
+      :v "DEL" 'evil-delete-char
+      "<f5>" 'toby/toggle-org-agenda)
 
 ;; after SPC
 (map! :leader
@@ -144,8 +146,27 @@
         org-ellipsis " ▼ "
         org-hide-emphasis-markers t)
 
-  (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/inbox.org") "* TODO %?" :empty-lines 1)
-                                ("l" "Link" entry (file "~/mega/org/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
+  (setq org-agenda-files `(,(concat org-agenda-dir "inbox.org")
+                           ,(concat org-agenda-dir "next.org")
+                           ,(concat org-agenda-dir "projects.org")
+                           ,(concat org-agenda-dir "someday.org")))
+
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+
+  (setq org-tag-alist (quote (("@errand" . ?e)
+                              ("@office" . ?o)
+                              ("@home" . ?h)
+                              (:newline)
+                              ("WAITING" . ?w))))
+
+  (setq org-refile-allow-creating-parent-nodes 't
+        org-refile-targets '(("next.org" :level . 0)
+                             ("someday.org" :level . 0)
+                             ("projects.org" :maxlevel . 1)))
+
+  (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/agenda/inbox.org") "* TODO %?" :empty-lines 1)
+                                ("l" "Link" entry (file "~/mega/org/agenda/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
 
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
@@ -204,15 +225,51 @@ line are justified."
   (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
   (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
 
+  (defun org-gcal--notify (title message)
+    (ignore message)
+    (message (concat "Org-gcal: " (downcase title))))
+
   (defun toby/get-org-gcal-credentials ()
     (setq org-gcal-client-id (password-store-get "org-gcal/id")
-          org-gcal-client-secret (password-store-get "org-gcal/secret")))
+          org-gcal-client-secret (password-store-get "org-gcal/secret"))
+    (advice-remove 'org-gcal-request-token 'toby/get-org-gcal-credentials)
+    (advice-remove 'org-gcal--refresh-token 'toby/get-org-gcal-credentials))
 
-  (advice-add 'org-gcal-request-token :before 'toby/get-org-gcal-credentials))
+  (advice-add 'org-gcal-request-token :before 'toby/get-org-gcal-credentials)
+  (advice-add 'org-gcal--refresh-token :before 'toby/get-org-gcal-credentials))
+
+(after! org-agenda
+  (setq org-agenda-block-separator nil
+        org-agenda-start-with-log-mode 't
+
+        org-agenda-restore-windows-after-quit 't
+
+        org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+
+  (setq org-agenda-custom-commands `((" " "Agenda"
+                                      ((agenda "" ((org-agenda-span 'day)
+                                                   (org-agenda-start-day nil)
+                                                   (org-deadline-warning-days 365)))
+                                      (todo "TODO" ((org-agenda-overriding-header "To refile")
+                                                    (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
+                                      (todo "NEXT" ((org-agenda-overriding-header "In progress")
+                                                    (org-agenda-files '(,(concat org-agenda-dir "someday.org")
+                                                                        ,(concat org-agenda-dir "projects.org")
+                                                                        ,(concat org-agenda-dir "next.org")))))
+                                      (todo "TODO" ((org-agenda-overriding-header "Projects")
+                                                    (org-agenda-files '(,(concat org-agenda-dir "projects.org")))))
+                                      (todo "TODO" ((org-agenda-overriding-header "Tasks")
+                                                    (org-agenda-files '(,(concat org-agenda-dir "next.org")))
+                                                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+                                      ))))
+
+  (require 'evil-org-agenda)
+  (defun toby/toggle-org-agenda ()
+    (interactive)
+    (if evil-org-agenda-mode (org-agenda-exit)
+      (org-agenda nil " "))))
 
 (after! (:and solaire-mode org)
-  ;; HACK: solaire org has the wrong colour at start up (but is fine after swapping themes)
-  ;;(set-face-attribute 'solaire-org-hide-face nil :foreground "#2D2A2E")
   (add-hook! 'org-mode-hook
     (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
     (writeroom-mode))
