@@ -150,7 +150,8 @@
   (setq org-agenda-files `(,(concat org-agenda-dir "inbox.org")
                            ,(concat org-agenda-dir "next.org")
                            ,(concat org-agenda-dir "projects.org")
-                           ,(concat org-agenda-dir "someday.org")))
+                           ,(concat org-agenda-dir "someday.org")
+                           ,(concat org-directory "calendar.org")))
 
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
