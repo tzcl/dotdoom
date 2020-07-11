@@ -202,7 +202,13 @@ line are justified."
   (setq org-gcal-file-alist '(("tubby@gmail.com" . "~/mega/org/calendar.org")))
 
   (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
-  (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch))
+  (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
+
+  (defun toby/get-org-gcal-credentials ()
+    (setq org-gcal-client-id (password-store-get "org-gcal/id")
+          org-gcal-client-secret (password-store-get "org-gcal/secret")))
+
+  (advice-add 'org-gcal-request-token :before 'toby/get-org-gcal-credentials))
 
 (after! (:and solaire-mode org)
   ;; HACK: solaire org has the wrong colour at start up (but is fine after swapping themes)
