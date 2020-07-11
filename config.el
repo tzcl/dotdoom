@@ -199,7 +199,7 @@ line are justified."
 
 (use-package! org-gcal
   :config
-  (setq org-gcal-file-alist '(("tubby@gmail.com" . "~/mega/org/calendar.org")))
+  (setq org-gcal-file-alist '(("michlaw23@gmail.com" . "~/mega/org/calendar.org")))
 
   (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
   (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
