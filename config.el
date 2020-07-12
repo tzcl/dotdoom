@@ -44,7 +44,7 @@
 ;; after SPC
 (map! :leader
       :mnv "t w" (lambda () (interactive) (visual-fill-column-mode 'toggle))
-      :mnv "w x" (lambda () (interactive) (doom-kill-buffer-and-windows (current-buffer)))
+      :mnv "w x" (lambda () (interactive) (save-buffer) (doom-kill-buffer-and-windows (current-buffer)))
       :mnv "p O" 'projectile-find-other-file-other-window)
 
 ;; in org-mode
@@ -156,12 +156,15 @@
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
 
+  (setq org-todo-keyword-faces '(("WAITING" . +org-todo-onhold)
+                                 ("HOLD" . +org-todo-onhold)))
+
   (setq org-tag-alist '(("uni" . ?u) ; type of work
                         ("megasorber" . ?m)
                         ("programming" . ?p)
                         (:newline)
-                        ("WAITING" . ?W) ; special tags
-                        ("PRIORITY" ?P)
+                        ("WAITING" . ?w) ; special tags
+                        ("IMPORTANT" . ?i)
                         ))
 
   (setq org-refile-allow-creating-parent-nodes 't
