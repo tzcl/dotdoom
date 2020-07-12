@@ -52,6 +52,10 @@
       :mnv "SPC m h" 'toby/org-toggle-headings
       :ei "M-SPC m h" 'toby/org-toggle-headings)
 
+;; in org-agenda
+(map! :map evil-org-agenda-mode-map
+      "q" 'org-agenda-exit)
+
 ;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
 (map! :map calendar-mode-map
       :n "o" #'org-journal-display-entry
@@ -344,18 +348,18 @@ line are justified."
           (setq newhead (org-get-heading)))
         (org-agenda-change-all-lines newhead hdmarker))))
 
-  (map! :map evil-org-agenda-mode-map "q" 'toby/close-agenda))
+  (add-hook! 'org-clock-in-hook :append (org-todo "NEXT"))
+  (advice-add 'org-agenda-exit :before 'toby/close-agenda))
 
 (defun toby/close-agenda ()
   (interactive)
   (toby/org-archive-done-tasks)
-  (org-save-all-org-buffers)
-  (org-agenda-exit))
+  (org-save-all-org-buffers))
 
 (defun toby/toggle-org-agenda ()
   (interactive)
   (require 'evil-org-agenda)
-  (if evil-org-agenda-mode (toby/close-agenda)
+  (if evil-org-agenda-mode (org-agenda-exit)
     (org-agenda nil " ")))
 
 (after! (:and solaire-mode org)
