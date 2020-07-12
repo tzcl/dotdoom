@@ -43,8 +43,8 @@
 
 ;; after SPC
 (map! :leader
-      "t w" (lambda () (interactive) (visual-fill-column-mode 'toggle))
-
+      :mnv "t w" (lambda () (interactive) (visual-fill-column-mode 'toggle))
+      :mnv "w x" (lambda () (interactive) (doom-kill-buffer-and-windows (current-buffer)))
       :mnv "p O" 'projectile-find-other-file-other-window)
 
 ;; in org-mode
@@ -150,11 +150,8 @@
   (setq org-agenda-files `(,(concat org-agenda-dir "inbox.org")
                            ,(concat org-agenda-dir "next.org")
                            ,(concat org-agenda-dir "projects.org")
-                           ,(concat org-agenda-dir "someday.org")
+                           ,(concat org-agenda-dir "ideas.org")
                            ,(concat org-directory "calendar.org")))
-
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
 
   (setq org-tag-alist (quote (("@errand" . ?e)
                               ("@office" . ?o)
@@ -164,7 +161,7 @@
 
   (setq org-refile-allow-creating-parent-nodes 't
         org-refile-targets '(("next.org" :level . 0)
-                             ("someday.org" :level . 0)
+                             ("ideas.org" :level . 0)
                              ("projects.org" :maxlevel . 1)))
 
   (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/agenda/inbox.org") "* TODO %?" :empty-lines 1)
@@ -210,7 +207,11 @@ line are justified."
 (defun toby/org-archive-done-tasks ()
     "Archive all done tasks."
     (interactive)
-    (org-map-entries 'org-archive-subtree "/DONE" 'file))
+    (org-map-entries
+     (lambda ()
+       (org-archive-subtree)
+       (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+     "/DONE" 'agenda))
 
 (defun toby/clean-org-latex-cache ()
   (interactive)
@@ -260,7 +261,7 @@ line are justified."
                                       (todo "TODO" ((org-agenda-overriding-header "To refile")
                                                     (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
                                       (todo "NEXT" ((org-agenda-overriding-header "In progress")
-                                                    (org-agenda-files '(,(concat org-agenda-dir "someday.org")
+                                                    (org-agenda-files '(,(concat org-agenda-dir "ideas.org")
                                                                         ,(concat org-agenda-dir "projects.org")
                                                                         ,(concat org-agenda-dir "next.org")))))
                                       (todo "TODO" ((org-agenda-overriding-header "Projects")
@@ -269,12 +270,6 @@ line are justified."
                                                     (org-agenda-files '(,(concat org-agenda-dir "next.org")))
                                                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                                       ))))
-
-  (require 'evil-org-agenda)
-  (defun toby/toggle-org-agenda ()
-    (interactive)
-    (if evil-org-agenda-mode (org-agenda-exit)
-      (org-agenda nil " ")))
 
   (defun toby/process-inbox ()
     (interactive)
@@ -340,7 +335,20 @@ line are justified."
           (end-of-line 1)
           (setq newhead (org-get-heading)))
         (org-agenda-change-all-lines newhead hdmarker))))
-  )
+
+  (map! :map evil-org-agenda-mode-map "q" 'toby/close-agenda))
+
+(defun toby/close-agenda ()
+  (interactive)
+  (toby/org-archive-done-tasks)
+  (org-save-all-org-buffers)
+  (org-agenda-exit))
+
+(defun toby/toggle-org-agenda ()
+  (interactive)
+  (require 'evil-org-agenda)
+  (if evil-org-agenda-mode (toby/close-agenda)
+    (org-agenda nil " ")))
 
 (after! (:and solaire-mode org)
   (add-hook! 'org-mode-hook
