@@ -153,11 +153,16 @@
                            ,(concat org-agenda-dir "ideas.org")
                            ,(concat org-directory "calendar.org")))
 
-  (setq org-tag-alist (quote (("@errand" . ?e)
-                              ("@office" . ?o)
-                              ("@home" . ?h)
-                              (:newline)
-                              ("WAITING" . ?w))))
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+
+  (setq org-tag-alist '(("uni" . ?u) ; type of work
+                        ("megasorber" . ?m)
+                        ("programming" . ?p)
+                        (:newline)
+                        ("WAITING" . ?W) ; special tags
+                        ("PRIORITY" ?P)
+                        ))
 
   (setq org-refile-allow-creating-parent-nodes 't
         org-refile-targets '(("next.org" :level . 0)
