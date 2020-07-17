@@ -175,6 +175,8 @@
   (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/agenda/inbox.org") "* TODO %?" :empty-lines 1)
                                 ("l" "Link" entry (file "~/mega/org/agenda/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
 
+  (add-hook! org-capture-after-finalize-hook (org-agenda-maybe-redo))
+
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
 
