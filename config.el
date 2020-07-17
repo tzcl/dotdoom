@@ -23,7 +23,7 @@
       doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
 
 ;; Make fonts bigger on Windows
-(when (string-match "-[Mm]icrosoft" operating-system-release)
+(when (string-match "Toby-XPS" system-name)
   (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 20)
         doom-variable-pitch-font (font-spec :family "ETBembo" :size 24)))
 
