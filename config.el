@@ -22,7 +22,7 @@
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14)
       doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
 
-;; Make fonts bigger on Windows
+;; Make fonts bigger on laptop
 (when (string-match "Toby-XPS" system-name)
   (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 20)
         doom-variable-pitch-font (font-spec :family "ETBembo" :size 24)))
@@ -150,7 +150,7 @@
   (setq org-agenda-files `(,(concat org-agenda-dir "inbox.org")
                            ,(concat org-agenda-dir "next.org")
                            ,(concat org-agenda-dir "projects.org")
-                           ,(concat org-agenda-dir "ideas.org")
+                           ,(concat org-agenda-dir "someday.org")
                            ,(concat org-directory "calendar.org")))
 
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
@@ -271,7 +271,7 @@ line are justified."
                                       (todo "TODO" ((org-agenda-overriding-header "To refile")
                                                     (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
                                       (todo "NEXT" ((org-agenda-overriding-header "In progress")
-                                                    (org-agenda-files '(,(concat org-agenda-dir "ideas.org")
+                                                    (org-agenda-files '(,(concat org-agenda-dir "someday.org")
                                                                         ,(concat org-agenda-dir "projects.org")
                                                                         ,(concat org-agenda-dir "next.org")))))
                                       (todo "TODO" ((org-agenda-overriding-header "Projects")
