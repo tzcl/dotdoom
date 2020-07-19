@@ -169,11 +169,17 @@
 
   (setq org-refile-allow-creating-parent-nodes 't
         org-refile-targets '(("next.org" :level . 0)
-                             ("ideas.org" :level . 0)
+                             ("someday.org" :level . 0)
+                             ("reading.org" :level . 1)
+                             ("writing.org" :level . 1)
                              ("projects.org" :maxlevel . 1)))
 
-  (setq org-capture-templates '(("i" "Inbox" entry (file "~/mega/org/agenda/inbox.org") "* TODO %?" :empty-lines 1)
-                                ("l" "Link" entry (file "~/mega/org/agenda/inbox.org") "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)))
+  (setq org-inbox-file "~/mega/org/agenda/inbox.org")
+
+  (setq org-capture-templates `(("i" "Inbox" entry (file ,org-inbox-file) "* TODO %?" :empty-lines 1)
+                                ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)
+                                ("r" "Reading" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?" :empty-lines 1)
+                                ("w" "Writing" entry (file ,org-inbox-file) "* TODO %?" :empty-lines 1)))
 
   (add-hook! org-capture-after-finalize-hook (org-agenda-maybe-redo))
 
