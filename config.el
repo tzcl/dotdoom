@@ -39,7 +39,7 @@
       :mnv "$" 'evil-end-of-line
       :mnv "g $" 'evil-end-of-visual-line
       :v "DEL" 'evil-delete-char
-      "<f5>" 'toby/toggle-org-agenda)
+      "<f8>" 'toby/toggle-org-agenda)
 
 ;; after SPC
 (map! :leader
