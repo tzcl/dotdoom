@@ -155,6 +155,7 @@
   (setq org-todo-keyword-faces '(("WAITING" . +org-todo-onhold)
                                  ("HOLD" . +org-todo-onhold)))
 
+  ;; TODO: find tags that are actually useful
   (setq org-tag-alist '(("uni" . ?u) ; type of work
                         ("programming" . ?p)
                         (:newline)
@@ -175,8 +176,7 @@
 
   (setq org-capture-templates `(("i" "Inbox" entry (file ,org-inbox-file) "* TODO %?" :empty-lines 1)
                                 ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)
-                                ("r" "Reading" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?" :empty-lines 1)
-                                ("w" "Writing" entry (file ,org-inbox-file) "* TODO %?" :empty-lines 1)))
+                                ("r" "Read" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?" :empty-lines 1)))
 
   (add-hook! org-capture-after-finalize-hook (org-agenda-maybe-redo))
 
@@ -277,12 +277,14 @@ line are justified."
                                                     (org-agenda-files '(,(concat org-agenda-dir "someday.org")
                                                                         ,(concat org-agenda-dir "reading.org")
                                                                         ,(concat org-agenda-dir "writing.org")
-                                                                        ,(concat org-agenda-dir "projects.org")
+                                                                        ,(concat org-agenda-dir "uni.org")
                                                                         ,(concat org-agenda-dir "megasorber.org")
+                                                                        ,(concat org-agenda-dir "projects.org")
                                                                         ,(concat org-agenda-dir "next.org")))))
                                       (todo "TODO" ((org-agenda-overriding-header "Projects")
-                                                    (org-agenda-files '(,(concat org-agenda-dir "projects.org")
-                                                                        ,(concat org-agenda-dir "megasorber.org")))))
+                                                    (org-agenda-files '(,(concat org-agenda-dir "uni.org")
+                                                                        ,(concat org-agenda-dir "megasorber.org")
+                                                                        ,(concat org-agenda-dir "projects.org")))))
                                       (todo "TODO" ((org-agenda-overriding-header "Tasks")
                                                     (org-agenda-files '(,(concat org-agenda-dir "next.org")))
                                                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
