@@ -23,7 +23,7 @@
       doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
 
 ;; Make fonts bigger on laptop
-(when (string-match "Toby-XPS" system-name)
+(when (string-match "Toby-XPS" (system-name))
   (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 20)
         doom-variable-pitch-font (font-spec :family "ETBembo" :size 24)))
 
@@ -147,12 +147,7 @@
         org-ellipsis " ▼ "
         org-hide-emphasis-markers 't)
 
-  (setq org-agenda-files `(,(concat org-agenda-dir "inbox.org")
-                           ,(concat org-agenda-dir "next.org")
-                           ,(concat org-agenda-dir "projects.org")
-                           ,(concat org-agenda-dir "someday.org")
-                           ,(concat org-agenda-dir "megasorber.org")
-                           ,(concat org-directory "calendar.org")))
+  (setq org-agenda-files (cons (concat org-directory "calendar.org") (directory-files org-agenda-dir t "\\.org$")))
 
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
@@ -171,9 +166,10 @@
         org-refile-targets '(("next.org" :level . 0)
                              ("someday.org" :level . 0)
                              ("reading.org" :level . 2)
-                             ("writing.org" :maxlevel . 2)
+                             ("writing.org" :level . 1)
                              ("projects.org" :maxlevel . 1)
-                             ("megasorber.org" :level . 0)))
+                             ("megasorber.org" :level . 0)
+                             ("uni.org" :level . 0)))
 
   (setq org-inbox-file "~/mega/org/agenda/inbox.org")
 
