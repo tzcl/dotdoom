@@ -217,7 +217,7 @@ line are justified."
   (interactive)
   (org-toggle-heading (org-current-level)))
 
-(defun toby/org-archive-done-tasks ()
+(defun toby/archive-done-tasks ()
     "Archive all done tasks."
     (interactive)
     (org-map-entries
@@ -306,7 +306,7 @@ line are justified."
                   (progn (message "Skipping removed entry at %s" e)
                          (cl-incf skipped))
                 (goto-char pos)
-                (let (org-loop-over-headlines-in-active-region) (funcall 'toby/org-agenda-process-inbox-item))
+                (let (org-loop-over-headlines-in-active-region) (funcall 'toby/process-item))
                 ;; `post-command-hook' is not run yet.  We make sure any
                 ;; pending log note is processed.
                 (when (or (memq 'org-add-log-note (default-value 'post-command-hook))
@@ -323,14 +323,15 @@ line are justified."
                              skipped))
                    (if (not org-agenda-persistent-marks) "" " (kept marked)")))))
 
-  (defun toby/org-agenda-process-inbox-item ()
+  (defun toby/process-item ()
+    (interactive)
     (org-with-wide-buffer
      (org-agenda-set-tags)
      (org-agenda-priority)
      (call-interactively 'toby/org-set-effort)
      (org-agenda-refile nil nil t)))
 
-  (setq org-agenda-bulk-custom-functions '((?j toby/org-agenda-process-inbox-item)))
+  (setq org-agenda-bulk-custom-functions '((?j toby/process-item)))
 
   (defvar toby/org-current-effort "1:00")
 
