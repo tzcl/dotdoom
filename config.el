@@ -174,11 +174,13 @@
 
   (setq org-inbox-file "~/mega/org/agenda/inbox.org")
 
-  (setq org-capture-templates `(("i" "Inbox" entry (file ,org-inbox-file) "* TODO %?" :empty-lines 1)
-                                ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t :empty-lines 1)
-                                ("r" "Read" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?" :empty-lines 1)))
+  (setq org-capture-templates `(("i" "Inbox" entry (file ,org-inbox-file) "* TODO %?")
+                                ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t)
+                                ("r" "Read" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?")
+                                ("w" "Weekly review" entry (file+olp+datetree ,(concat org-agenda-dir "progress.org"))
+                                 (file ,(concat org-directory "templates/weekly_review.org")))))
 
-  (add-hook! org-capture-after-finalize-hook (org-agenda-maybe-redo))
+  (add-hook! 'org-capture-after-finalize-hook (org-agenda-maybe-redo))
 
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
