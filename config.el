@@ -156,8 +156,11 @@
                                  ("HOLD" . +org-todo-onhold)))
 
   ;; TODO: find tags that are actually useful
-  (setq org-tag-alist '(("uni" . ?u) ; type of work
-                        ("programming" . ?p)
+  (setq org-tag-alist '(("MAST30001" . ?s) ; type of work
+                        ("COMP20008" . ?d)
+                        ("INFO20003" . ?i)
+                        ("COMP10001" . ?c)
+                        ("ENGR10003" . ?e)
                         (:newline)
                         ("WAITING" . ?w) ; special tags
                         ("IMPORTANT" . ?i)
