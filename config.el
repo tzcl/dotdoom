@@ -161,6 +161,7 @@
                         ("INFO20003" . ?i)
                         ("COMP10001" . ?c)
                         ("ENGR10003" . ?e)
+                        ("B1" . ?b)
                         (:newline)
                         ("WAITING" . ?w) ; special tags
                         ("IMPORTANT" . ?i)
