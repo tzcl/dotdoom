@@ -239,6 +239,9 @@ line are justified."
 (after! org-superstar
   (setq org-superstar-leading-bullet ?\s))
 
+(after! org-fancy-priorities
+  (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
+
 (after! org-journal
   (setq org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
