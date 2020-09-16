@@ -34,23 +34,23 @@
 ;;; Keybindings
 
 ;; global
-(map! "C-'" 'better-comment-dwim
-      :mnv "g D" 'xref-find-definitions-other-window
-      :mnv "$" 'evil-end-of-line
-      :mnv "g $" 'evil-end-of-visual-line
-      :v "DEL" 'evil-delete-char
-      "<f8>" 'toby/toggle-org-agenda)
+(map! "C-'" #'better-comment-dwim
+      :nv "g D" #'xref-find-definitions-other-window
+      :mnv "$" #'evil-end-of-line
+      :mnv "g $" #'evil-end-of-visual-line
+      :v "DEL" #'evil-delete-char
+      "<f8>" #'toby/toggle-org-agenda)
 
 ;; after SPC
 (map! :leader
-      :mnv "t w" (lambda () (interactive) (visual-fill-column-mode 'toggle))
-      :mnv "w x" (lambda () (interactive) (save-buffer) (doom-kill-buffer-and-windows (current-buffer)))
-      :mnv "p O" 'projectile-find-other-file-other-window)
+      :nv "t w" (lambda () (interactive) (visual-fill-column-mode 'toggle))
+      :nv "w x" (lambda () (interactive) (save-buffer) (doom-kill-buffer-and-windows (current-buffer)))
+      :nv "p O" #'projectile-find-other-file-other-window)
 
 ;; in org-mode
 (map! :map org-mode-map
-      :mnv "SPC m h" 'toby/org-toggle-headings
-      :ei "M-SPC m h" 'toby/org-toggle-headings)
+      :nv "SPC m h" #'toby/org-toggle-headings
+      :ei "M-SPC m h" #'toby/org-toggle-headings)
 
 ;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
 (map! :map calendar-mode-map
@@ -145,7 +145,8 @@
         org-indent-mode-turns-on-hiding-stars nil
         org-catch-invisible-edits 't
         org-ellipsis " ▼ "
-        org-hide-emphasis-markers 't)
+        org-hide-emphasis-markers 't
+        org-log-into-drawer 't)
 
   (setq org-agenda-files (cons (concat org-directory "calendar.org") (directory-files org-agenda-dir t "\\.org$")))
 
@@ -155,21 +156,20 @@
   (setq org-todo-keyword-faces '(("WAITING" . +org-todo-onhold)
                                  ("HOLD" . +org-todo-onhold)))
 
-  ;; TODO: find tags that are actually useful
   (setq org-tag-alist '(("MAST30001" . ?s) ; type of work
                         ("COMP20008" . ?d)
                         ("INFO20003" . ?i)
                         ("COMP10001" . ?c)
                         ("ENGR10003" . ?e)
-                        ("B1" . ?b)
                         (:newline)
-                        ("WAITING" . ?w) ; special tags
-                        ("IMPORTANT" . ?i)
+                        ("@megasorber" . ?m)
+                        ("@errand" . ?o)
+                        ("@home" . ?h)
                         ))
 
   (setq org-refile-allow-creating-parent-nodes 't
         org-refile-targets '(("next.org" :level . 0)
-                             ("someday.org" :level . 0)
+                             ("someday.org" :level . 1)
                              ("reading.org" :level . 2)
                              ("writing.org" :level . 1)
                              ("projects.org" :maxlevel . 1)
@@ -207,7 +207,7 @@ line are justified."
            (= beg (line-beginning-position)))
       (let* ((img (create-image image (intern imagetype)))
              (width (car (image-size img)))
-             (offset (floor (- (/ 160 2) (/ width 2)))))
+             (offset (floor (- (/ 140 2) (/ width 2)))))
         (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
      ;; Right justification
      ((and (eq 'right (plist-get org-format-latex-options :justify))
@@ -279,7 +279,7 @@ line are justified."
   (setq org-agenda-custom-commands `((" " "Agenda"
                                       ((agenda "" ((org-agenda-span 'day)
                                                    (org-agenda-start-day nil)
-                                                   (org-deadline-warning-days 365)))
+                                                   (org-deadline-warning-days 14)))
                                       (todo "TODO" ((org-agenda-overriding-header "To refile")
                                                     (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
                                       (todo "NEXT" ((org-agenda-overriding-header "In progress")
@@ -388,14 +388,6 @@ line are justified."
                 (face-attribute 'solaire-default-face :background nil t))))
 
   (add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
-
-;; Shortcut to insert images
-;; TODO: see how org-download works, replace this with that?
-(defvar img-d "~/mega/misc/img")
-(defun toby/img-complete-link ()
-  "Create an image link using completion."
-  (interactive)
-  (org-insert-link nil (concat "file:" (abbreviate-file-name (expand-file-name (read-file-name "Image: " img-d)))) nil))
 
 ;;; DWIM functions
 ;; Better commenting
