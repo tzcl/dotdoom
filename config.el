@@ -150,20 +150,15 @@
 
   (setq org-agenda-files (cons (concat org-directory "calendar.org") (directory-files org-agenda-dir t "\\.org$")))
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+  (setq org-todo-keyword-faces '(("[-]"  . +org-todo-project)
+                                 ("STRT" . +org-todo-project)
+                                 ("[?]"  . +org-todo-onhold)
+                                 ("WAIT" . +org-todo-onhold)
+                                 ("HOLD" . +org-todo-onhold)
+                                 ("PROJ" . +org-todo-active)))
 
-  (setq org-todo-keyword-faces '(("WAITING" . +org-todo-onhold)
-                                 ("HOLD" . +org-todo-onhold)))
-
-  (setq org-tag-alist '(("MAST30001" . ?s) ; type of work
-                        ("COMP20008" . ?d)
-                        ("INFO20003" . ?i)
-                        ("COMP10001" . ?c)
-                        ("ENGR10003" . ?e)
-                        (:newline)
-                        ("@megasorber" . ?m)
-                        ("@errand" . ?o)
+  (setq org-tag-alist '(("@megasorber" . ?m)
+                        ("@errand" . ?e)
                         ("@home" . ?h)
                         ))
 
@@ -282,7 +277,7 @@ line are justified."
                                                    (org-deadline-warning-days 14)))
                                       (todo "TODO" ((org-agenda-overriding-header "To refile")
                                                     (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
-                                      (todo "NEXT" ((org-agenda-overriding-header "In progress")
+                                      (todo "STRT" ((org-agenda-overriding-header "In progress")
                                                     (org-agenda-files '(,(concat org-agenda-dir "someday.org")
                                                                         ,(concat org-agenda-dir "reading.org")
                                                                         ,(concat org-agenda-dir "writing.org")
@@ -290,12 +285,15 @@ line are justified."
                                                                         ,(concat org-agenda-dir "megasorber.org")
                                                                         ,(concat org-agenda-dir "projects.org")
                                                                         ,(concat org-agenda-dir "next.org")))))
-                                      (todo "TODO" ((org-agenda-overriding-header "Projects")
+                                      (todo "PROJ" ((org-agenda-overriding-header "Projects")
+                                                    (org-agenda-files '(,(concat org-agenda-dir "uni.org")))
+                                                    (org-agenda-files '(,(concat org-agenda-dir "megasorber.org")))
+                                                    (org-agenda-files '(,(concat org-agenda-dir "projects.org")))
+                                                    ))
+                                      (todo "TODO" ((org-agenda-overriding-header "Tasks")
                                                     (org-agenda-files '(,(concat org-agenda-dir "uni.org")
                                                                         ,(concat org-agenda-dir "megasorber.org")
-                                                                        ,(concat org-agenda-dir "projects.org")))))
-                                      (todo "TODO" ((org-agenda-overriding-header "Tasks")
-                                                    (org-agenda-files '(,(concat org-agenda-dir "next.org")))
+                                                                        ,(concat org-agenda-dir "next.org")))
                                                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                                       ))))
 
@@ -365,7 +363,7 @@ line are justified."
           (setq newhead (org-get-heading)))
         (org-agenda-change-all-lines newhead hdmarker))))
 
-  (add-hook! 'org-clock-in-hook :append (org-todo "NEXT"))
+  (add-hook! 'org-clock-in-hook :append (org-todo "STRT"))
   (advice-add 'org-agenda-exit :before 'org-save-all-org-buffers)
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers))
 
