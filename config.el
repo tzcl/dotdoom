@@ -267,6 +267,8 @@ line are justified."
   (setq org-agenda-block-separator nil
         org-agenda-start-with-log-mode 't
 
+        org-clocktable-defaults (plist-put org-clocktable-defaults :fileskip0 't)
+
         org-agenda-restore-windows-after-quit 't
 
         org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
