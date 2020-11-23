@@ -378,6 +378,8 @@ line are justified."
 (after! (:and solaire-mode org)
   (add-hook! 'org-mode-hook
     (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
+    (display-line-numbers-mode)
+    (hl-line-mode)
     (writeroom-mode))
 
   (defun toby/fix-org-latex-preview-background-colour (&rest _)
