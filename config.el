@@ -63,8 +63,8 @@
       "m" #'org-journal-search-calendar-month
       "y" #'org-journal-search-calendar-year)
 (map! :map org-journal-search-mode-map
-      :n "j" #'org-journal-search-next
-      :n "k" #'org-journal-search-prev
+      :n "j" #'org-journal--search-next
+      :n "k" #'org-journal--search-prev
       :n "q" #'kill-this-buffer)
 
 ;;
@@ -140,6 +140,9 @@
   ;; Add cppreference to +lookup/online
   (add-to-list '+lookup-provider-url-alist '("C++ Reference" "https://en.cppreference.com/mwiki/index.php?search=%s")))
 
+(after! magit
+  (keychain-refresh-environment))
+
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
@@ -176,6 +179,7 @@
   (setq org-capture-templates `(("i" "Inbox" entry (file ,org-inbox-file) "* TODO %?")
                                 ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t)
                                 ("r" "Read" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?")
+                                ("p" "Project" entry (file ,(concat org-agenda-dir "projects.org")) "* PROJ %?")
                                 ("w" "Weekly review" entry (file+olp+datetree ,(concat org-agenda-dir "progress.org"))
                                  (file ,(concat org-directory "templates/weekly_review.org")))))
 
