@@ -153,6 +153,9 @@
 
   (setq org-agenda-files (cons (concat org-directory "calendar.org") (directory-files org-agenda-dir t "\\.org$")))
 
+  (setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "STRT(s)" "WAIT(w@)" "HOLD(h@)" "|" "DONE(d)" "KILL(k)")
+                           (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
+
   (setq org-todo-keyword-faces '(("[-]"  . +org-todo-project)
                                  ("STRT" . +org-todo-project)
                                  ("[?]"  . +org-todo-onhold)
