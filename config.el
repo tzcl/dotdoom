@@ -247,12 +247,12 @@ line are justified."
 (after! org-journal
   (setq org-journal-file-format "%Y-%m-%d"
         org-journal-file-type 'monthly
-        org-journal-dir "~/mega/org/journal/"
+        org-journal-dir (concat org-directory "journal/")
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"))
 
 (use-package! org-gcal
   :config
-  (setq org-gcal-file-alist '(("michlaw23@gmail.com" . "~/mega/org/calendar.org")))
+  (setq org-gcal-file-alist `(("michlaw23@gmail.com" . ,(concat org-directory "calendar.org"))))
 
   (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
   (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
