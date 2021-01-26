@@ -9,8 +9,8 @@
       doom-theme 'doom-monokai-pro
       display-line-numbers-type t
 
-      org-directory "~/mega/org/"
-      org-agenda-dir "~/mega/org/agenda/"
+      org-directory "~/projects/org/"
+      org-agenda-dir "~/projects/org/agenda/"
       calendar-week-start-day 1
 
       mode-line-default-help-echo nil
