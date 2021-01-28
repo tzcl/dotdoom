@@ -151,7 +151,7 @@
         org-hide-emphasis-markers 't
         org-log-into-drawer 't)
 
-  (setq org-agenda-files (cons (concat org-directory "calendar.org") (directory-files org-agenda-dir t "\\.org$")))
+  (setq org-agenda-files '("~/projects/org/agenda"))
 
   (setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "STRT(s)" "WAIT(w@)" "HOLD(h@)" "|" "DONE(d)" "KILL(k)")
                            (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
@@ -169,15 +169,9 @@
                         ))
 
   (setq org-refile-allow-creating-parent-nodes 't
-        org-refile-targets '(("next.org" :level . 0)
-                             ("someday.org" :level . 1)
-                             ("reading.org" :level . 2)
-                             ("writing.org" :level . 1)
-                             ("projects.org" :maxlevel . 1)
-                             ("megasorber.org" :level . 0)
-                             ("uni.org" :level . 0)))
+        org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
-  (setq org-inbox-file "~/mega/org/agenda/inbox.org")
+  (setq org-inbox-file (concat org-agenda-dir "inbox.org"))
 
   (setq org-capture-templates `(("i" "Inbox" entry (file ,org-inbox-file) "* TODO %?")
                                 ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t)
@@ -252,7 +246,7 @@ line are justified."
 
 (use-package! org-gcal
   :config
-  (setq org-gcal-file-alist `(("michlaw23@gmail.com" . ,(concat org-directory "calendar.org"))))
+  (setq org-gcal-file-alist `(("michlaw23@gmail.com" . ,(concat org-agenda-dir "calendar.org"))))
 
   (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
   (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
