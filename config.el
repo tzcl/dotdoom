@@ -184,7 +184,7 @@
                                 ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t)
                                 ("r" "Read" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?")
                                 ("p" "Project" entry (file ,(concat org-agenda-dir "projects.org")) "* PROJ %?")
-                                ("w" "Weekly review" entry (file+olp+datetree ,(concat org-agenda-dir "progress.org"))
+                                ("w" "Weekly review" entry (file+olp+datetree ,(concat org-directory "review/review.org"))
                                  (file ,(concat org-directory "templates/weekly_review.org")))))
 
   (add-hook! 'org-capture-after-finalize-hook (org-agenda-maybe-redo))
