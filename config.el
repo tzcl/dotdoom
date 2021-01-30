@@ -11,6 +11,8 @@
 
       org-directory "~/projects/org/"
       org-agenda-dir "~/projects/org/agenda/"
+      deft-directory "~/projects/org/notes"
+      deft-recursive 't
       calendar-week-start-day 1
 
       mode-line-default-help-echo nil
@@ -50,7 +52,9 @@
 ;; in org-mode
 (map! :map org-mode-map
       :nv "SPC m h" #'toby/org-toggle-headings
-      :ei "M-SPC m h" #'toby/org-toggle-headings)
+      :ei "M-SPC m h" #'toby/org-toggle-headings
+      :nv "SPC n r j" #'toby/find-roam-index
+      :ei "M-SPC n r j" #'toby/find-roam-index)
 
 ;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
 (map! :map calendar-mode-map
@@ -66,6 +70,33 @@
       :n "j" #'org-journal--search-next
       :n "k" #'org-journal--search-prev
       :n "q" #'kill-this-buffer)
+
+;; in deft buffer
+(map! :map deft-mode-map
+      :n "gr"  #'deft-refresh
+      :n "C-s" #'deft-filter
+      :i "C-n" #'deft-new-file
+      :i "C-m" #'deft-new-file-named
+      :i "C-d" #'deft-delete-file
+      :i "C-r" #'deft-rename-file
+      :n "r"   #'deft-rename-file
+      :n "a"   #'deft-new-file
+      :n "A"   #'deft-new-file-named
+      :n "d"   #'deft-delete-file
+      :n "D"   #'deft-archive-file
+      :n "q"   #'kill-current-buffer
+      :localleader
+      "RET" #'deft-new-file-named
+      "a"   #'deft-archive-file
+      "c"   #'deft-filter-clear
+      "d"   #'deft-delete-file
+      "f"   #'deft-find-file
+      "g"   #'deft-refresh
+      "l"   #'deft-filter
+      "n"   #'deft-new-file
+      "r"   #'deft-rename-file
+      "s"   #'deft-toggle-sort-method
+      "t"   #'deft-toggle-incremental-search)
 
 ;;
 ;;; Packages
@@ -142,6 +173,9 @@
 
 (after! magit
   (keychain-refresh-environment))
+
+(after! better-jumper
+  (setq better-jumper-add-jump-behavior 'replace))
 
 (after! org
   (setq org-hide-leading-stars nil
