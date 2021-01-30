@@ -353,7 +353,7 @@ line are justified."
                   (progn (message "Skipping removed entry at %s" e)
                          (cl-incf skipped))
                 (goto-char pos)
-                (let (org-loop-over-headlines-in-active-region) (funcall 'toby/process-item))
+                (let (org-loop-over-headlines-in-active-region) (funcall 'toby/process-task))
                 ;; `post-command-hook' is not run yet.  We make sure any
                 ;; pending log note is processed.
                 (when (or (memq 'org-add-log-note (default-value 'post-command-hook))
@@ -370,15 +370,24 @@ line are justified."
                              skipped))
                    (if (not org-agenda-persistent-marks) "" " (kept marked)")))))
 
-  (defun toby/process-item ()
+  (defun toby/process-task ()
     (interactive)
     (org-with-wide-buffer
      (org-agenda-set-tags)
      (org-agenda-priority)
      (call-interactively 'toby/org-set-effort)
-     (org-agenda-refile nil nil t)))
+     (org-agenda-todo)
+     (org-agenda-refile nil nil 't)))
 
-  (setq org-agenda-bulk-custom-functions '((?j toby/process-item)))
+  (defun toby/make-project ()
+    (interactive)
+    (org-with-wide-buffer
+     (org-agenda-priority)
+     (org-agenda-todo "PROJ")
+     (org-agenda-refile nil (list nil (concat org-agenda-dir "projects.org")) 't)))
+
+  (setq org-agenda-bulk-custom-functions '((?j toby/process-task)
+                                           (?k toby/make-project)))
 
   (defvar toby/org-current-effort "1:00")
 
@@ -504,6 +513,18 @@ line are justified."
                  (setq res (cons (substring str 0 (match-beginning 0)) res))
                  (setq str (substring str (match-beginning 0)))))))
       (reverse res))))
+
+(defun toby/find-roam-index ()
+  (interactive)
+  (find-file (org-roam--get-index-path)))
+
+(defun toby/refile-agenda (file headline)
+  "Move current headline to specified location"
+  (let ((pos (save-excursion
+              (find-file file)
+              (if headline
+                  (org-find-exact-headline-in-buffer headline)))))
+    (org-agenda-refile nil (list headline file nil pos) 't)))
 
 (defun toby/light-theme ()
   (interactive)
