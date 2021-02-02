@@ -487,11 +487,12 @@ line are justified."
   "Returns a list of org agenda files excluding those passed as arguments"
   (cl-remove-if
    (lambda (excl)
-     (dolist (file files)
-       (when (string=
-              excl
-              (expand-file-name (concat org-agenda-dir file)))
-         (return 't))))
+     (catch 'excl
+       (dolist (file files)
+         (when (string=
+                excl
+                (expand-file-name (concat org-agenda-dir file)))
+           (throw 'excl 't)))))
    (org-agenda-files)))
 
 (defun toby/light-theme ()
