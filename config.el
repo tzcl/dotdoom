@@ -290,7 +290,7 @@ line are justified."
                                       (todo "STRT" ((org-agenda-overriding-header "In progress")))
                                       (todo "PROJ" ((org-agenda-overriding-header "Projects")))
                                       (todo "TODO" ((org-agenda-overriding-header "Tasks")
-                                                    (org-agenda-files ',(toby/agenda-excl "someday.org" "projects.org" "reading.org"))
+                                                    (org-agenda-files ',(toby/agenda-excl "someday.org" "projects.org" "reading.org" "inbox.org"))
                                                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                                       ))))
 
