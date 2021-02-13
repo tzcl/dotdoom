@@ -156,6 +156,7 @@
         org-catch-invisible-edits 't
         org-ellipsis " ▼ "
         org-hide-emphasis-markers 't
+        org-log-done 'time
         org-log-into-drawer 't)
 
   (setq org-agenda-files '("~/projects/org/agenda"))
@@ -333,7 +334,6 @@ line are justified."
      (org-agenda-set-tags)
      (org-agenda-priority)
      (call-interactively 'toby/org-set-effort)
-     (org-agenda-todo)
      (org-agenda-refile nil nil 't)))
 
   (defun toby/make-project ()
