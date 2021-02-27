@@ -277,6 +277,8 @@ line are justified."
         org-agenda-start-with-log-mode 't
 
         org-clocktable-defaults (plist-put org-clocktable-defaults :fileskip0 't)
+        org-clock-out-remove-zero-time-clocks 't
+        org-clock-report-include-clocking-task 't
 
         org-agenda-restore-windows-after-quit 't
 
