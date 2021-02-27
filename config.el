@@ -379,7 +379,20 @@ line are justified."
   (interactive)
   (require 'evil-org-agenda)
   (if evil-org-agenda-mode (org-agenda-quit)
-    (org-agenda nil " ")))
+    (progn
+      (setq org-agenda-custom-commands `((" " "Agenda"
+                                          ((agenda "" ((org-agenda-span 'day)
+                                                       (org-agenda-start-day nil)
+                                                       (org-deadline-warning-days 14)))
+                                           (todo "TODO" ((org-agenda-overriding-header "To refile")
+                                                         (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
+                                           (todo "STRT" ((org-agenda-overriding-header "In progress")))
+                                           (todo "PROJ" ((org-agenda-overriding-header "Projects")))
+                                           (todo "TODO" ((org-agenda-overriding-header "Tasks")
+                                                         (org-agenda-files ',(toby/agenda-excl "someday.org" "projects.org" "reading.org" "inbox.org"))
+                                                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+                                           ))))
+      (org-agenda nil " "))))
 
 (after! (:and solaire-mode org)
   (add-hook! 'org-mode-hook
