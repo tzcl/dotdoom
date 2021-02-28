@@ -24,11 +24,6 @@
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14)
       doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
 
-;; Make fonts bigger on laptop
-(when (string-match "Toby-XPS" (system-name))
-  (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 20)
-        doom-variable-pitch-font (font-spec :family "ETBembo" :size 24)))
-
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
 
@@ -136,10 +131,6 @@
   ;; Faces to stop being mixed pitch
   (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces))
 
-(after! projectile
-  (when (string-match "-[Mm]icrosoft" operating-system-release)
-    (setq projectile-indexing-method 'native)))
-
 (after! lookup
   ;; Add cppreference to +lookup/online
   (add-to-list '+lookup-provider-url-alist '("C++ Reference" "https://en.cppreference.com/mwiki/index.php?search=%s")))
@@ -192,10 +183,6 @@
 
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
-
-  ;; Org latex previews
-  (when (string-match "-[Mm]icrosoft" operating-system-release)
-    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.75)))
 
   (plist-put org-format-latex-options :justify 'center)
 
