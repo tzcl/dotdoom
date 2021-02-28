@@ -152,10 +152,13 @@
 
   (setq org-agenda-files '("~/projects/org/agenda"))
 
+  (custom-declare-face '+org-todo-item  '((t (:inherit (bold org-todo)))) "")
+
   (setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "STRT(s)" "WAIT(w@)" "HOLD(h@)" "|" "DONE(d)" "KILL(k)")
                            (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
 
-  (setq org-todo-keyword-faces '(("[-]"  . +org-todo-project)
+  (setq org-todo-keyword-faces '(("TODO" . +org-todo-item)
+                                 ("[-]"  . +org-todo-project)
                                  ("STRT" . +org-todo-project)
                                  ("[?]"  . +org-todo-onhold)
                                  ("WAIT" . +org-todo-onhold)
