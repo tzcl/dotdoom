@@ -64,7 +64,7 @@
 (map! :map org-journal-search-mode-map
       :n "j" #'org-journal--search-next
       :n "k" #'org-journal--search-prev
-      :n "q" #'kill-this-buffer)
+      :n "q" (lambda () (interactive) (kill-this-buffer) (windmove-right) (kill-buffer-and-window)))
 
 ;;
 ;;; Packages
@@ -212,6 +212,33 @@ line are justified."
 
   (advice-add 'org--make-preview-overlay :after 'org-justify-fragment-overlay)
 
+  ;; Fix ox-html bug
+  (setq org-html-mathjax-template
+  "<script type=\"text/x-mathjax-config\">
+   <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        displayAlign: \"%ALIGN\",
+        displayIndent: \"%INDENT\",
+
+        \"HTML-CSS\": { scale: %SCALE,
+                        linebreaks: { automatic: \"%LINEBREAKS\" },
+                        webFont: \"%FONT\"
+                       },
+        SVG: {scale: %SCALE,
+              linebreaks: { automatic: \"%LINEBREAKS\" },
+              font: \"%FONT\"},
+        NativeMML: {scale: %SCALE},
+        TeX: { equationNumbers: {autoNumber: \"%AUTONUMBER\"},
+               MultLineWidth: \"%MULTLINEWIDTH\",
+               TagSide: \"%TAGSIDE\",
+               TagIndent: \"%TAGINDENT\"
+             }
+});
+/*]]>*///-->
+</script>
+<script type=\"text/javascript\"
+        src=\"%PATH\"></script>")
+
 ;; Make org-toggle-headings nicer
 (defun toby/org-toggle-headings ()
   (interactive)
@@ -249,8 +276,8 @@ line are justified."
   (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
   (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
 
-  (defun org-gcal--notify (title message)
-    (ignore message)
+  (defun org-gcal--notify (title message &optional c)
+    (ignore message c)
     (message (concat "Org-gcal: " (downcase title))))
 
   (defun toby/get-org-gcal-credentials ()
