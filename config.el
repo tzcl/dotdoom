@@ -9,9 +9,9 @@
       doom-theme 'doom-monokai-pro
       display-line-numbers-type t
 
-      org-directory "~/projects/org/"
-      org-agenda-dir "~/projects/org/agenda/"
-      deft-directory "~/projects/org/notes"
+      org-directory "~/MEGAsync/org/"
+      deft-directory "~/MEGAsync/org/notes"
+      org-agenda-dir "~/MEGAsync/org/agenda"
       deft-recursive 't
       calendar-week-start-day 1
 
@@ -273,8 +273,8 @@ line are justified."
   :config
   (setq org-gcal-file-alist `(("michlaw23@gmail.com" . ,(concat org-agenda-dir "calendar.org"))))
 
-  (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
-  (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
+  ;; (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
+  ;; (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
 
   (defun org-gcal--notify (title message &optional c)
     (ignore message c)
