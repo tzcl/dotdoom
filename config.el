@@ -258,7 +258,9 @@ line are justified."
   (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
 
 (after! org-superstar
-  (setq org-superstar-leading-bullet ?\s))
+  (setq org-superstar-leading-bullet ?\s)
+  (setq org-superstar-headline-bullets-list '(9673)) ; temp fix for macbook
+  )
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
