@@ -15,6 +15,8 @@
       deft-recursive 't
       calendar-week-start-day 1
 
+      ispell-dictionary "en"
+
       mode-line-default-help-echo nil
       show-help-function nil)
 
@@ -428,6 +430,14 @@ line are justified."
                 (face-attribute 'solaire-default-face :background nil t))))
 
   (add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
+
+(setq lsp-clients-clangd-args '("-j=3"
+                                "--background-index"
+                                "--clang-tidy"
+                                "--completion-style=detailed"
+                                "--header-insertion=never"
+                                "--header-insertion-decorators=0"))
+(after! lsp-clangd (set-lsp-priority! 'clangd 2))
 
 ;;; DWIM functions
 ;; Better commenting
