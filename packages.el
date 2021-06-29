@@ -21,9 +21,9 @@
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
-(package! focus)
-(package! ov)
-(package! keychain-environment)
+(package! focus)                        ; for nicer writing
+(package! ov)                           ; for latex equation centering
+(package! keychain-environment)         ; helper for ssh-agent/gpg-agent
 
 ;; To install a package directly from a particular repo, you'll need to specify
 ;; a `:recipe'. You'll find documentation on what `:recipe' accepts here:
