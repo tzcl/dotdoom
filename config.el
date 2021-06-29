@@ -37,8 +37,7 @@
       :nv "g D" #'xref-find-definitions-other-window
       :mnv "$" #'evil-end-of-line
       :mnv "g $" #'evil-end-of-visual-line
-      :v "DEL" #'evil-delete-char
-      "<f8>" #'toby/toggle-org-agenda)
+      :v "DEL" #'evil-delete-char)
 
 ;; after SPC
 (map! :leader
@@ -133,10 +132,6 @@
   ;; Faces to stop being mixed pitch
   (cl-delete-if (lambda (x) (memq x '(font-lock-comment-face))) mixed-pitch-fixed-pitch-faces))
 
-(after! lookup
-  ;; Add cppreference to +lookup/online
-  (add-to-list '+lookup-provider-url-alist '("C++ Reference" "https://en.cppreference.com/mwiki/index.php?search=%s")))
-
 (after! magit
   (keychain-refresh-environment))
 
@@ -146,45 +141,11 @@
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
-        org-catch-invisible-edits 't
+        org-catch-invisible-edits 'error
         org-ellipsis " ▼ "
-        org-hide-emphasis-markers 't
-        org-log-done 'time
-        org-log-into-drawer 't)
+        org-hide-emphasis-markers 't)
 
-  (setq org-agenda-files '("~/projects/org/agenda"))
-
-  (custom-declare-face '+org-todo-item  '((t (:inherit (bold org-todo)))) "")
-
-  (setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "STRT(s)" "WAIT(w@)" "HOLD(h@)" "|" "DONE(d)" "KILL(k)")
-                           (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
-
-  (setq org-todo-keyword-faces '(("TODO" . +org-todo-item)
-                                 ("[-]"  . +org-todo-project)
-                                 ("STRT" . +org-todo-project)
-                                 ("[?]"  . +org-todo-onhold)
-                                 ("WAIT" . +org-todo-onhold)
-                                 ("HOLD" . +org-todo-onhold)
-                                 ("PROJ" . +org-todo-active)))
-
-  (setq org-tag-alist '(("@megasorber" . ?m)
-                        ("@errand" . ?e)
-                        ("@home" . ?h)
-                        ))
-
-  (setq org-refile-allow-creating-parent-nodes 't
-        org-refile-targets '((org-agenda-files :maxlevel . 2)))
-
-  (setq org-inbox-file (concat org-agenda-dir "inbox.org"))
-
-  (setq org-capture-templates `(("i" "Inbox" entry (file ,org-inbox-file) "* TODO %?")
-                                ("l" "Link" entry (file ,org-inbox-file) "* TODO %(org-cliplink-capture)" :immediate-finish t)
-                                ("r" "Read" entry (file ,org-inbox-file) "* TODO %^{Title}\nAuthor: %^{Author}\n%?")
-                                ("p" "Project" entry (file ,(concat org-agenda-dir "projects.org")) "* PROJ %?")
-                                ("w" "Weekly review" entry (file+olp+datetree ,(concat org-directory "review/review.org"))
-                                 (file ,(concat org-directory "templates/weekly_review.org")))))
-
-  (add-hook! 'org-capture-after-finalize-hook (org-agenda-maybe-redo))
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
 
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
@@ -193,9 +154,9 @@
 
   (defun org-justify-fragment-overlay (beg end image imagetype)
     "Adjust the justification of a LaTeX fragment.
-The justification is set by :justify in
-`org-format-latex-options'. Only equations at the beginning of a
-line are justified."
+  The justification is set by :justify in
+  `org-format-latex-options'. Only equations at the beginning of a
+  line are justified."
     (require 'ov)
     (cond
      ;; Centered justification
@@ -216,7 +177,7 @@ line are justified."
 
   ;; Fix ox-html bug
   (setq org-html-mathjax-template
-  "<script type=\"text/x-mathjax-config\">
+        "<script type=\"text/x-mathjax-config\">
    <!--/*--><![CDATA[/*><!--*/
     MathJax.Hub.Config({
         displayAlign: \"%ALIGN\",
@@ -235,29 +196,20 @@ line are justified."
                TagSide: \"%TAGSIDE\",
                TagIndent: \"%TAGINDENT\"
              }
-});
-/*]]>*///-->
-</script>
-<script type=\"text/javascript\"
+  });
+  /*]]>*///-->
+  </script>
+  <script type=\"text/javascript\"
         src=\"%PATH\"></script>")
 
-;; Make org-toggle-headings nicer
-(defun toby/org-toggle-headings ()
-  (interactive)
-  (org-toggle-heading (org-current-level)))
-
-(defun toby/archive-done-tasks ()
-    "Archive all done tasks."
+  ;; Make org-toggle-headings nicer
+  (defun toby/org-toggle-headings ()
     (interactive)
-    (org-map-entries
-     (lambda ()
-       (org-archive-subtree)
-       (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
-     "/DONE" 'agenda))
+    (org-toggle-heading (org-current-level)))
 
-(defun toby/clean-org-latex-cache ()
-  (interactive)
-  (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
+  (defun toby/clean-org-latex-cache ()
+    (interactive)
+    (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
 
 (after! org-superstar
   (setq org-superstar-leading-bullet ?\s)
@@ -273,163 +225,13 @@ line are justified."
         org-journal-dir (concat org-directory "journal/")
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"))
 
-(use-package! org-gcal
-  :config
-  (setq org-gcal-file-alist `(("michlaw23@gmail.com" . ,(concat org-agenda-dir "calendar.org"))))
-
-  ;; (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
-  ;; (add-hook 'org-capture-after-finalize-hook 'org-gcal-fetch)
-
-  (defun org-gcal--notify (title message &optional c)
-    (ignore message c)
-    (message (concat "Org-gcal: " (downcase title))))
-
-  (defun toby/get-org-gcal-credentials ()
-    (setq org-gcal-client-id (password-store-get "org-gcal/id")
-          org-gcal-client-secret (password-store-get "org-gcal/secret"))
-    (advice-remove 'org-gcal-request-token 'toby/get-org-gcal-credentials)
-    (advice-remove 'org-gcal--refresh-token 'toby/get-org-gcal-credentials))
-
-  (advice-add 'org-gcal-request-token :before 'toby/get-org-gcal-credentials)
-  (advice-add 'org-gcal--refresh-token :before 'toby/get-org-gcal-credentials))
-
-(after! org-agenda
-  (setq org-agenda-block-separator nil
-        org-agenda-start-with-log-mode 't
-
-        org-clocktable-defaults (plist-put org-clocktable-defaults :fileskip0 't)
-        org-clock-out-remove-zero-time-clocks 't
-        org-clock-report-include-clocking-task 't
-
-        org-agenda-restore-windows-after-quit 't
-
-        org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
-
-  (setq org-agenda-custom-commands `((" " "Agenda"
-                                      ((agenda "" ((org-agenda-span 'day)
-                                                   (org-agenda-start-day nil)
-                                                   (org-deadline-warning-days 14)))
-                                      (todo "TODO" ((org-agenda-overriding-header "To refile")
-                                                    (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
-                                      (todo "STRT" ((org-agenda-overriding-header "In progress")))
-                                      (todo "PROJ" ((org-agenda-overriding-header "Projects")))
-                                      (todo "TODO" ((org-agenda-overriding-header "Tasks")
-                                                    (org-agenda-files ',(toby/agenda-excl "someday.org" "projects.org" "reading.org" "inbox.org"))
-                                                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-                                      ))))
-
-  (defun toby/process-inbox ()
-    (interactive)
-    (org-agenda-bulk-mark-regexp "inbox:")
-    (toby/bulk-process-entries))
-
-  (defun toby/bulk-process-entries ()
-    (if (not (null org-agenda-bulk-marked-entries))
-        (let ((entries (reverse org-agenda-bulk-marked-entries))
-              (processed 0)
-              (skipped 0))
-          (dolist (e entries)
-            (let ((pos (text-property-any (point-min) (point-max) 'org-hd-marker e)))
-              (if (not pos)
-                  (progn (message "Skipping removed entry at %s" e)
-                         (cl-incf skipped))
-                (goto-char pos)
-                (let (org-loop-over-headlines-in-active-region) (funcall 'toby/process-task))
-                ;; `post-command-hook' is not run yet.  We make sure any
-                ;; pending log note is processed.
-                (when (or (memq 'org-add-log-note (default-value 'post-command-hook))
-                          (memq 'org-add-log-note post-command-hook))
-                  (org-add-log-note))
-                (cl-incf processed))))
-          (org-agenda-redo)
-          (unless org-agenda-persistent-marks (org-agenda-bulk-unmark-all))
-          (message "Acted on %d entries%s%s"
-                   processed
-                   (if (= skipped 0)
-                       ""
-                     (format ", skipped %d (disappeared before their turn)"
-                             skipped))
-                   (if (not org-agenda-persistent-marks) "" " (kept marked)")))))
-
-  (defun toby/process-task ()
-    (interactive)
-    (org-with-wide-buffer
-     (org-agenda-set-tags)
-     (org-agenda-priority)
-     (call-interactively 'toby/org-set-effort)
-     (org-agenda-refile nil nil 't)))
-
-  (defun toby/make-project ()
-    (interactive)
-    (org-with-wide-buffer
-     (org-agenda-priority)
-     (org-agenda-todo "PROJ")
-     (org-agenda-refile nil (list nil (concat org-agenda-dir "projects.org")) 't)))
-
-  (setq org-agenda-bulk-custom-functions '((?j toby/process-task)
-                                           (?k toby/make-project)))
-
-  (defvar toby/org-current-effort "1:00")
-
-  (defun toby/org-set-effort (effort)
-    (interactive
-     (list (read-string (format "Effort [%s]: " toby/org-current-effort) nil nil toby/org-current-effort)))
-    (setq toby/org-current-effort effort)
-    (org-agenda-check-no-diary)
-    (let* ((hdmarker (or (org-get-at-bol 'org-hd-marker)
-                         (org-agenda-error)))
-           (buffer (marker-buffer hdmarker))
-           (pos (marker-position hdmarker))
-           (inhibit-read-only t)
-           newhead)
-      (org-with-remote-undo buffer
-        (with-current-buffer buffer
-          (widen)
-          (goto-char pos)
-          (org-show-context 'agenda)
-          (funcall-interactively 'org-set-effort nil toby/org-current-effort)
-          (end-of-line 1)
-          (setq newhead (org-get-heading)))
-        (org-agenda-change-all-lines newhead hdmarker))))
-
-  (add-hook! 'org-clock-in-hook :append (org-todo "STRT"))
-  (advice-add 'org-agenda-exit :before 'org-save-all-org-buffers)
-  (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers))
-
-(defun toby/toggle-org-agenda ()
-  (interactive)
-  (require 'evil-org-agenda)
-  (if evil-org-agenda-mode (org-agenda-quit)
-    (progn
-      (setq org-agenda-custom-commands `((" " "Agenda"
-                                          ((agenda "" ((org-agenda-span 'day)
-                                                       (org-agenda-start-day nil)
-                                                       (org-deadline-warning-days 14)))
-                                           (todo "TODO" ((org-agenda-overriding-header "To refile")
-                                                         (org-agenda-files '(,(concat org-agenda-dir "inbox.org")))))
-                                           (todo "STRT" ((org-agenda-overriding-header "In progress")))
-                                           (todo "PROJ" ((org-agenda-overriding-header "Projects")))
-                                           (todo "TODO" ((org-agenda-overriding-header "Tasks")
-                                                         (org-agenda-files ',(toby/agenda-excl "someday.org" "projects.org" "reading.org" "inbox.org"))
-                                                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-                                           ))))
-      (org-agenda nil " "))))
-
 (after! (:and solaire-mode org)
   (add-hook! 'org-mode-hook
     (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
     (display-line-numbers-mode)
     (hl-line-mode)
     (writeroom-mode))
-
-  (defun toby/fix-org-latex-preview-background-colour (&rest _)
-    (setq-default
-     org-format-latex-options
-     (plist-put org-format-latex-options
-                :background
-                (face-attribute 'solaire-default-face :background nil t))))
-
-  (add-hook 'solaire-mode-hook #'toby/fix-org-latex-preview-background-colour))
+  )
 
 (setq lsp-clients-clangd-args '("-j=3"
                                 "--background-index"
@@ -518,26 +320,6 @@ line are justified."
 (defun toby/find-roam-index ()
   (interactive)
   (find-file (org-roam--get-index-path)))
-
-(defun toby/refile-agenda (file headline)
-  "Move current headline to specified location"
-  (let ((pos (save-excursion
-              (find-file file)
-              (if headline
-                  (org-find-exact-headline-in-buffer headline)))))
-    (org-agenda-refile nil (list headline file nil pos) 't)))
-
-(defun toby/agenda-excl (&rest files)
-  "Returns a list of org agenda files excluding those passed as arguments"
-  (cl-remove-if
-   (lambda (excl)
-     (catch 'excl
-       (dolist (file files)
-         (when (string=
-                excl
-                (expand-file-name (concat org-agenda-dir file)))
-           (throw 'excl 't)))))
-   (org-agenda-files)))
 
 (defun toby/light-theme ()
   (interactive)
