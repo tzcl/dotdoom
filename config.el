@@ -9,9 +9,9 @@
       doom-theme 'doom-monokai-pro
       display-line-numbers-type t
 
-      org-directory "~/MEGAsync/org/"
-      deft-directory "~/MEGAsync/org/notes"
-      org-agenda-dir "~/MEGAsync/org/agenda"
+      org-directory "~/mega/org/"
+      deft-directory "~/mega/org/notes"
+      org-agenda-dir "~/mega/org/agenda"
       deft-recursive 't
       calendar-week-start-day 1
 
