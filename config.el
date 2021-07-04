@@ -52,6 +52,10 @@
       :nv "SPC n r j" #'toby/find-roam-index
       :ei "M-SPC n r j" #'toby/find-roam-index)
 
+(map! :map deft-mode-map
+      :ei "C-p" #'widget-backward
+      :ei "C-n" #'widget-forward)
+
 ;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
 (map! :map calendar-mode-map
       :n "o" #'org-journal-display-entry
