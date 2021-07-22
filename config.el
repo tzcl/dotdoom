@@ -10,8 +10,8 @@
       display-line-numbers-type t
 
       org-directory "~/mega/org/"
-      deft-directory "~/mega/org/notes"
       org-agenda-dir "~/mega/org/agenda"
+      deft-directory "~/mega/org/notes"
       deft-recursive 't
       calendar-week-start-day 1
 
@@ -48,9 +48,7 @@
 ;; in org-mode
 (map! :map org-mode-map
       :nv "SPC m h" #'toby/org-toggle-headings
-      :ei "M-SPC m h" #'toby/org-toggle-headings
-      :nv "SPC n r j" #'toby/find-roam-index
-      :ei "M-SPC n r j" #'toby/find-roam-index)
+      :ei "M-SPC m h" #'toby/org-toggle-headings)
 
 (map! :map deft-mode-map
       :ei "C-p" #'widget-backward
@@ -320,10 +318,6 @@
                  (setq res (cons (substring str 0 (match-beginning 0)) res))
                  (setq str (substring str (match-beginning 0)))))))
       (reverse res))))
-
-(defun toby/find-roam-index ()
-  (interactive)
-  (find-file (org-roam--get-index-path)))
 
 (defun toby/light-theme ()
   (interactive)
