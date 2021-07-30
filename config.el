@@ -6,9 +6,6 @@
       doom-scratch-initial-major-mode 'org-mode
       doom-scratch-buffer-major-mode 'org-mode
 
-      doom-theme 'doom-monokai-pro
-      display-line-numbers-type t
-
       org-directory "~/mega/org/"
       org-agenda-dir "~/mega/org/agenda"
       deft-directory "~/mega/org/notes"
@@ -22,6 +19,23 @@
 
 ;;
 ;;; UI
+
+(defun toby/light-theme ()
+  (interactive)
+  (setq doom-theme 'doom-solarized-light)
+  (doom/reload-theme)
+  (set-face-attribute 'font-lock-comment-face nil :slant 'unspecified))
+
+(defun toby/dark-theme ()
+  (interactive)
+  (setq doom-theme 'doom-monokai-pro)
+  (doom/reload-theme))
+
+(if (member (string-to-number (format-time-string "%H")) (number-sequence 6 18))
+    (toby/light-theme)
+  (toby/dark-theme))
+
+(setq display-line-numbers-type 'relative)
 
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14)
       doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
@@ -318,14 +332,3 @@
                  (setq res (cons (substring str 0 (match-beginning 0)) res))
                  (setq str (substring str (match-beginning 0)))))))
       (reverse res))))
-
-(defun toby/light-theme ()
-  (interactive)
-  (setq doom-theme 'doom-solarized-light)
-  (doom/reload-theme)
-  (set-face-attribute 'font-lock-comment-face nil :slant 'unspecified))
-
-(defun toby/dark-theme ()
-  (interactive)
-  (setq doom-theme 'doom-monokai-pro)
-  (doom/reload-theme))
