@@ -65,8 +65,8 @@
       :ei "M-SPC m h" #'toby/org-toggle-headings)
 
 (map! :map deft-mode-map
-      :ei "C-p" #'widget-backward
-      :ei "C-n" #'widget-forward)
+      :ei "C-p" #'evil-previous-line
+      :ei "C-n" #'evil-next-line)
 
 ;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
 (map! :map calendar-mode-map
