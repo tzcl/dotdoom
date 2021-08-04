@@ -170,6 +170,12 @@
   (setq org-highlight-latex-and-related nil) ; with 'native, inline Latex blocks
                                              ; get fontified which I don't want
 
+  ;; Using dvipng is blurry on retina display
+  (when (eq system-type 'darwin)
+    (plist-put org-format-latex-options :scale 1)
+    (setq org-preview-latex-default-process 'dvisvgm)
+    )
+
   ;; Center display equations
   (plist-put org-format-latex-options :justify 'center)
 
