@@ -166,6 +166,11 @@
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
 
+  ;; Fix background of inline equations
+  (setq org-highlight-latex-and-related nil) ; with 'native, inline Latex blocks
+                                             ; get fontified which I don't want
+
+  ;; Center display equations
   (plist-put org-format-latex-options :justify 'center)
 
   (defun org-justify-fragment-overlay (beg end image imagetype)
