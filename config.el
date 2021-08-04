@@ -185,7 +185,7 @@
            (= beg (line-beginning-position)))
       (let* ((img (create-image image (intern imagetype)))
              (width (car (image-size img)))
-             (offset (floor (- (/ (window-text-width) 2) (/ width 2)))))
+             (offset (floor (- (/ 180 2) (/ width 2)))))
         (overlay-put (ov-at) 'before-string (make-string offset ?\s))))
      ;; Right justification
      ((and (eq 'right (plist-get org-format-latex-options :justify))
