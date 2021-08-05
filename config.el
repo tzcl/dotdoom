@@ -154,6 +154,21 @@
 (after! better-jumper
   (setq better-jumper-add-jump-behavior 'replace))
 
+(after! smartparens
+  (sp-local-pair 'org-mode "\\[" "\\]")
+  (sp-local-pair 'org-mode "\\left(" "\\right)" :trigger "\\l(" :post-handlers '(sp-latex-insert-spaces-inside-pair))
+  (sp-local-pair 'org-mode "\\left[" "\\right]" :trigger "\\l[" :post-handlers '(sp-latex-insert-spaces-inside-pair))
+  (sp-local-pair 'org-mode "\\left\\{" "\\right\\}" :trigger "\\l{" :post-handlers '(sp-latex-insert-spaces-inside-pair))
+  (sp-local-pair 'org-mode "\\left|" "\\right|" :trigger "\\l|" :post-handlers '(sp-latex-insert-spaces-inside-pair)))
+
+(setq lsp-clients-clangd-args '("-j=3"
+                                "--background-index"
+                                "--clang-tidy"
+                                "--completion-style=detailed"
+                                "--header-insertion=never"
+                                "--header-insertion-decorators=0"))
+(after! lsp-clangd (set-lsp-priority! 'clangd 2))
+
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
@@ -167,8 +182,8 @@
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
 
   ;; Fix background of inline equations
-  (setq org-highlight-latex-and-related nil) ; with 'native, inline Latex blocks
-                                             ; get fontified which I don't want
+  (setq org-highlight-latex-and-related '(latex script entities))
+  ;; with 'native, inline Latex blocks get fontified which I don't want
 
   ;; Using dvipng is blurry on retina display
   (when (eq system-type 'darwin)
@@ -259,14 +274,6 @@
     (hl-line-mode)
     (writeroom-mode))
   )
-
-(setq lsp-clients-clangd-args '("-j=3"
-                                "--background-index"
-                                "--clang-tidy"
-                                "--completion-style=detailed"
-                                "--header-insertion=never"
-                                "--header-insertion-decorators=0"))
-(after! lsp-clangd (set-lsp-priority! 'clangd 2))
 
 ;;; DWIM functions
 ;; Better commenting
