@@ -31,7 +31,7 @@
   (setq doom-theme 'doom-monokai-pro)
   (doom/reload-theme))
 
-(if (member (string-to-number (format-time-string "%H")) (number-sequence 6 18))
+(if (member (string-to-number (format-time-string "%H")) (number-sequence 6 16))
     (toby/light-theme)
   (toby/dark-theme))
 
