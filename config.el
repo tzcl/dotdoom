@@ -169,6 +169,9 @@
                                 "--header-insertion-decorators=0"))
 (after! lsp-clangd (set-lsp-priority! 'clangd 2))
 
+(after! haskell-mode
+  (setq haskell-interactive-popup-errors nil))
+
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
