@@ -17,13 +17,16 @@
 ;(unpin! pinned-package)
 ;; Use it to unpin multiple packages
 ;(unpin! pinned-package another-pinned-package)
-(unpin! org-roam company-org-roam)
+(unpin! org-roam company-org-roam)      ; stay on the bleeding edge of org-roam
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 (package! focus)                        ; for nicer writing
 (package! ov)                           ; for latex equation centering
 (package! keychain-environment)         ; helper for ssh-agent/gpg-agent
+
+(package! websocket)                    ; for org-roam-ui
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out"))) ; front-end for org-roam
 
 ;; To install a package directly from a particular repo, you'll need to specify
 ;; a `:recipe'. You'll find documentation on what `:recipe' accepts here:
