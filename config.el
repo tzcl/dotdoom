@@ -22,14 +22,12 @@
 
 (defun toby/light-theme ()
   (interactive)
-  (setq doom-theme 'doom-solarized-light)
-  (doom/reload-theme)
+  (load-theme 'doom-solarized-light t)
   (set-face-attribute 'font-lock-comment-face nil :slant 'unspecified))
 
 (defun toby/dark-theme ()
   (interactive)
-  (setq doom-theme 'doom-monokai-pro)
-  (doom/reload-theme))
+  (load-theme 'doom-monokai-pro t))
 
 (if (member (string-to-number (format-time-string "%H")) (number-sequence 6 16))
     (toby/light-theme)
