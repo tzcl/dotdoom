@@ -170,6 +170,24 @@
 (after! haskell-mode
   (setq haskell-interactive-popup-errors nil))
 
+;; HACK: see https://github.com/flycheck/flycheck/issues/1762
+(defvar-local my-flycheck-local-cache nil)
+(defun my-flycheck-local-checker-get (fn checker property)
+  ;; Only check the buffer local cache for the LSP checker, otherwise we get
+  ;; infinite loops.
+  (if (eq checker 'lsp)
+      (or (alist-get property my-flycheck-local-cache)
+          (funcall fn checker property))
+    (funcall fn checker property)))
+
+(advice-add 'flycheck-checker-get
+            :around 'my-flycheck-local-checker-get)
+
+(add-hook 'lsp-managed-mode-hook
+          (lambda ()
+            (when (derived-mode-p 'python-mode)
+              (setq my-flycheck-local-cache '((next-checkers . (python-mypy)))))))
+
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
@@ -189,8 +207,8 @@
   ;; Using dvipng is blurry on retina display
   (when (eq system-type 'darwin)
     (plist-put org-format-latex-options :scale 1)
-    (setq org-preview-latex-default-process 'dvisvgm)
-    )
+    (setq org-preview-latex-default-process 'dvisvgm))
+
 
   ;; Center display equations
   (plist-put org-format-latex-options :justify 'center)
@@ -256,8 +274,8 @@
 
 (after! org-superstar
   (setq org-superstar-leading-bullet ?\s)
-  (setq org-superstar-headline-bullets-list '(9673)) ; temp fix for macbook
-  )
+  (setq org-superstar-headline-bullets-list '(9673))) ; temp fix for macbook
+
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
@@ -269,27 +287,27 @@
         org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"))
 
 (use-package! websocket
-    :after org-roam)
+  :after org-roam)
 
 (use-package! org-roam-ui
-    :after org-roam ;; or :after org
-;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-;;         a hookable mode anymore, you're advised to pick something yourself
-;;         if you don't care about startup time, use
-;;  :hook (after-init . org-roam-ui-mode)
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+  :after org-roam ;; or :after org
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
 
 (after! (:and solaire-mode org)
   (add-hook! 'org-mode-hook
     (face-remap-add-relative 'solaire-default-face :inherit 'variable-pitch)
     (display-line-numbers-mode)
     (hl-line-mode)
-    (writeroom-mode))
-  )
+    (writeroom-mode)))
+
 
 ;;; DWIM functions
 ;; Better commenting
@@ -308,7 +326,7 @@
               (comment-dwim nil))
           (progn
             (comment-or-uncomment-region $lbp $lep)
-            (forward-line )))))))
+            (forward-line)))))))
 
 ;; Better filename sorting
 (defun toby/sort-filenames (x y)
