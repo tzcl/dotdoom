@@ -57,6 +57,10 @@
       :nv "w x" (lambda () (interactive) (save-buffer) (doom-kill-buffer-and-windows (current-buffer)))
       :nv "p O" #'projectile-find-other-file-other-window)
 
+;; editing lisp
+(map! :map lispy-mode-map-special
+      :ei "T" #'lispy-eval-and-comment)
+
 ;; in org-mode
 (map! :map org-mode-map
       :nv "SPC m h" #'toby/org-toggle-headings
