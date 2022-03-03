@@ -183,11 +183,6 @@
 (advice-add 'flycheck-checker-get
             :around 'my-flycheck-local-checker-get)
 
-(add-hook 'lsp-managed-mode-hook
-          (lambda ()
-            (when (derived-mode-p 'python-mode)
-              (setq my-flycheck-local-cache '((next-checkers . (python-mypy)))))))
-
 (after! org
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
