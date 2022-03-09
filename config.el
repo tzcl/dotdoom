@@ -6,9 +6,9 @@
       doom-scratch-initial-major-mode 'org-mode
       doom-scratch-buffer-major-mode 'org-mode
 
-      org-directory "~/mega/org/"
-      org-agenda-dir "~/mega/org/agenda"
-      deft-directory "~/mega/org/notes"
+      org-directory "~/sync/org/"
+      org-agenda-dir "~/sync/org/agenda"
+      deft-directory "~/sync/org/notes"
       deft-recursive 't
       calendar-week-start-day 1
 
