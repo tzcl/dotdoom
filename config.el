@@ -29,13 +29,13 @@
   (interactive)
   (load-theme 'doom-monokai-pro t))
 
-(if (member (string-to-number (format-time-string "%H")) (number-sequence 6 16))
+(if (member (string-to-number (format-time-string "%H")) (number-sequence 6 18))
     (toby/light-theme)
   (toby/dark-theme))
 
 (setq display-line-numbers-type 'relative)
 
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14)
+(setq doom-font (font-spec :family "Fira Code" :size 14)
       doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
 
 (setq evil-vsplit-window-right t
