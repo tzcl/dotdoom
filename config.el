@@ -36,7 +36,17 @@
 (setq display-line-numbers-type 'relative)
 
 (setq doom-font (font-spec :family "Fira Code" :size 14)
-      doom-variable-pitch-font (font-spec :family "ETBembo" :size 16))
+      doom-variable-pitch-font (font-spec :family "ETBembo" :size 16)
+      doom-unicode-font (font-spec :family "Fira Code" :size 14))
+
+;; Need to change some of the ligatures for Fira Code
+(plist-put! +ligatures-extra-symbols
+            :true "⊤"
+            :false "⊥")
+
+;; Disable extra ligatures
+(setq +ligatures-extras-in-modes
+      '('not python-mode cc-mode))
 
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
@@ -270,7 +280,6 @@
 (after! org-superstar
   (setq org-superstar-leading-bullet ?\s)
   (setq org-superstar-headline-bullets-list '(9673))) ; temp fix for macbook
-
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
