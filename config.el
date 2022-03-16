@@ -291,8 +291,9 @@
     (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
 
 (after! org-superstar
-  (setq org-superstar-leading-bullet ?\s)
-  (setq org-superstar-headline-bullets-list '(9673))) ; temp fix for macbook
+  (setq org-superstar-leading-bullet ?\s
+        org-superstar-headline-bullets-list '(9673))
+  (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-16")) ; temp hacks
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
