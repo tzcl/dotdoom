@@ -51,6 +51,19 @@
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
 
+;; WSL-specific setup
+(when (and (eq system-type 'gnu/linux)
+           (getenv "WSLENV"))
+
+  ;; Open links in your default Windows browser
+  (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+        (cmd-args '("/c" "start")))
+    (when (file-exists-p cmd-exe)
+      (setq browse-url-generic-program  cmd-exe
+            browse-url-generic-args     cmd-args
+            browse-url-browser-function 'browse-url-generic
+            search-web-default-browser 'browse-url-generic))))
+
 ;;
 ;;; Keybindings
 
@@ -137,8 +150,8 @@
     (focus-mode 'toggle)
     (if writeroom-mode
         (when (not (one-window-p))
-          (setq need-to-restore? 't)
-          (setq writeroom-windows (current-window-configuration))
+          (setq need-to-restore? 't
+                writeroom-windows (current-window-configuration))
           (delete-other-windows))
       (when need-to-restore?
         (set-window-configuration writeroom-windows)
