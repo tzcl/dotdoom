@@ -254,6 +254,32 @@
 
   (advice-add 'org--make-preview-overlay :after 'org-justify-fragment-overlay)
 
+  ;; Define the publishing project
+  (load-file "~/projects/tzcl.me/ox-tufte.el")
+  (setq org-publish-project-alist
+       '(("tzcl.me"
+          :recursive t
+          :base-directory "~/projects/tzcl.me/content"
+          :publishing-directory "~/projects/tzcl.me/public"
+          :publishing-function org-html-publish-to-tufte-html
+
+          ;; Remove section numbers and table of contents
+          :section-numbers nil
+          :with-toc nil
+
+          ;; HTML output settings
+          :html-container-element "section"
+          :html-divs '((preamble "div" "preamble")
+                       (content "article" "content")
+                       (postamble "div" "postamble"))
+          :html-doctype "html5"
+          :html-html5-fancy t
+          :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
+          :html-head-include-scripts nil
+          :html-head-include-default-style nil
+          :html-postamble nil
+          :html-validation-link nil)))
+
   ;; Fix ox-html bug
   (setq org-html-mathjax-template
         "<script type=\"text/x-mathjax-config\">
