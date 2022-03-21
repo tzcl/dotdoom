@@ -235,28 +235,28 @@
   ;; Define the publishing project
   (load-file "~/projects/tzcl.me/ox-tufte.el")
   (setq org-publish-project-alist
-        '(("tzcl.me"
-           :recursive t
-           :base-directory "~/projects/tzcl.me/content"
-           :publishing-directory "~/projects/tzcl.me/public"
-           :publishing-function org-html-publish-to-tufte-html
+       '(("tzcl.me"
+          :recursive t
+          :base-directory "~/projects/tzcl.me/content"
+          :publishing-directory "~/projects/tzcl.me/public/blog"
+          :publishing-function org-html-publish-to-tufte-html
 
-           ;; Remove section numbers and table of contents
-           :section-numbers nil
-           :with-toc nil
+          ;; Remove section numbers and table of contents
+          :section-numbers nil
+          :with-toc nil
 
-           ;; HTML output settings
-           :html-container-element "section"
-           :html-divs '((preamble "div" "preamble")
-                        (content "article" "content")
-                        (postamble "div" "postamble"))
-           :html-doctype "html5"
-           :html-html5-fancy t
-           :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
-           :html-head-include-scripts nil
-           :html-head-include-default-style nil
-           :html-postamble nil
-           :html-validation-link nil)))
+          ;; HTML output settings
+          :html-container "section"
+          :html-divs ((preamble "div" "preamble")
+                      (content "article" "content")
+                      (postamble "div" "postamble"))
+          :html-doctype "html5"
+          :html-html5-fancy t
+          :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
+          :html-head-include-scripts nil
+          :html-head-include-default-style nil
+          :html-postamble nil
+          :html-validation-link nil)))
 
   ;; Fix ox-html bug
   (setq org-html-mathjax-template
@@ -295,8 +295,8 @@
     (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
 
 (after! org-superstar
-  (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-16")) ; temp hacks
-  (setq org-superstar-leading-bullet ?\s)
+  (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-16") ; temp hacks
+  (setq org-superstar-leading-bullet ?\s))
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
