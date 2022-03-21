@@ -89,21 +89,6 @@
       :ei "C-p" #'evil-previous-line
       :ei "C-n" #'evil-next-line)
 
-;; The built-in calendar mode and org-journal-search mappings conflict with evil bindings
-(map! :map calendar-mode-map
-      :n "o" #'org-journal-display-entry
-      :n "p" #'org-journal-previous-entry
-      :n "n" #'org-journal-next-entry
-      :n "O" #'org-journal-new-date-entry)
-(map! :map calendar-mode-map :localleader
-      "w" #'org-journal-search-calendar-week
-      "m" #'org-journal-search-calendar-month
-      "y" #'org-journal-search-calendar-year)
-(map! :map org-journal-search-mode-map
-      :n "j" #'org-journal--search-next
-      :n "k" #'org-journal--search-prev
-      :n "q" (lambda () (interactive) (kill-this-buffer) (windmove-right) (kill-buffer-and-window)))
-
 ;;
 ;;; Packages
 
@@ -175,13 +160,6 @@
 (after! better-jumper
   (setq better-jumper-add-jump-behavior 'replace))
 
-(after! smartparens
-  (sp-local-pair 'org-mode "\\[" "\\]")
-  (sp-local-pair 'org-mode "\\left(" "\\right)" :trigger "\\l(" :post-handlers '(sp-latex-insert-spaces-inside-pair))
-  (sp-local-pair 'org-mode "\\left[" "\\right]" :trigger "\\l[" :post-handlers '(sp-latex-insert-spaces-inside-pair))
-  (sp-local-pair 'org-mode "\\left\\{" "\\right\\}" :trigger "\\l{" :post-handlers '(sp-latex-insert-spaces-inside-pair))
-  (sp-local-pair 'org-mode "\\left|" "\\right|" :trigger "\\l|" :post-handlers '(sp-latex-insert-spaces-inside-pair)))
-
 (setq lsp-clients-clangd-args '("-j=3"
                                 "--background-index"
                                 "--clang-tidy"
@@ -233,9 +211,9 @@
 
   (defun org-justify-fragment-overlay (beg end image imagetype)
     "Adjust the justification of a LaTeX fragment.
-  The justification is set by :justify in
-  `org-format-latex-options'. Only equations at the beginning of a
-  line are justified."
+   The justification is set by :justify in
+   `org-format-latex-options'. Only equations at the beginning of a
+   line are justified."
     (require 'ov)
     (cond
      ;; Centered justification
@@ -257,28 +235,28 @@
   ;; Define the publishing project
   (load-file "~/projects/tzcl.me/ox-tufte.el")
   (setq org-publish-project-alist
-       '(("tzcl.me"
-          :recursive t
-          :base-directory "~/projects/tzcl.me/content"
-          :publishing-directory "~/projects/tzcl.me/public"
-          :publishing-function org-html-publish-to-tufte-html
+        '(("tzcl.me"
+           :recursive t
+           :base-directory "~/projects/tzcl.me/content"
+           :publishing-directory "~/projects/tzcl.me/public"
+           :publishing-function org-html-publish-to-tufte-html
 
-          ;; Remove section numbers and table of contents
-          :section-numbers nil
-          :with-toc nil
+           ;; Remove section numbers and table of contents
+           :section-numbers nil
+           :with-toc nil
 
-          ;; HTML output settings
-          :html-container-element "section"
-          :html-divs '((preamble "div" "preamble")
-                       (content "article" "content")
-                       (postamble "div" "postamble"))
-          :html-doctype "html5"
-          :html-html5-fancy t
-          :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
-          :html-head-include-scripts nil
-          :html-head-include-default-style nil
-          :html-postamble nil
-          :html-validation-link nil)))
+           ;; HTML output settings
+           :html-container-element "section"
+           :html-divs '((preamble "div" "preamble")
+                        (content "article" "content")
+                        (postamble "div" "postamble"))
+           :html-doctype "html5"
+           :html-html5-fancy t
+           :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
+           :html-head-include-scripts nil
+           :html-head-include-default-style nil
+           :html-postamble nil
+           :html-validation-link nil)))
 
   ;; Fix ox-html bug
   (setq org-html-mathjax-template
@@ -317,18 +295,11 @@
     (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
 
 (after! org-superstar
-  (setq org-superstar-leading-bullet ?\s
-        org-superstar-headline-bullets-list '(9673))
   (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-16")) ; temp hacks
+  (setq org-superstar-leading-bullet ?\s)
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
-
-(after! org-journal
-  (setq org-journal-file-format "%Y-%m-%d"
-        org-journal-file-type 'monthly
-        org-journal-dir (concat org-directory "journal/")
-        org-journal-file-header "#+TITLE: %B %Y\n#+STARTUP: overview\n\n"))
 
 (use-package! websocket
   :after org-roam)
@@ -385,7 +356,7 @@
 
 (defun dict< (str1 str2)
   "Return t if STR1 is < STR2 when doing a dictionary compare
-(splitting the string at numbers and doing numeric compare with them)"
+ (splitting the string at numbers and doing numeric compare with them)"
   (let ((str1-components (dict-split str1))
         (str2-components (dict-split str2)))
     (dict-lessp str1-components str2-components)))
