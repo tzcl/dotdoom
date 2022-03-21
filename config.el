@@ -39,15 +39,7 @@
       doom-variable-pitch-font (font-spec :family "ETBembo" :size 16)
       doom-unicode-font (font-spec :family "Fira Code" :size 14))
 
-;; Need to change some of the ligatures for Fira Code
-(plist-put! +ligatures-extra-symbols
-            :true "⊤"
-            :false "⊥")
-
-;; Disable extra ligatures
-(setq +ligatures-extras-in-modes
-      '('not python-mode cc-mode))
-
+;; Prefer opening windows right and below
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
 
@@ -63,6 +55,21 @@
             browse-url-generic-args     cmd-args
             browse-url-browser-function 'browse-url-generic
             search-web-default-browser 'browse-url-generic))))
+
+;;
+;;; Ligatures
+
+;; Need to change some of the ligatures for Fira Code
+(plist-put! +ligatures-extra-symbols
+            :true "⊤"
+            :false "⊥")
+
+;; Prevent ;; from being a ligature for better spacing
+(setq +ligatures-composition-alist (assq-delete-all ?\; +ligatures-composition-alist))
+
+;; Disable extra ligatures
+(setq +ligatures-extras-in-modes
+      '('not python-mode cc-mode))
 
 ;;
 ;;; Keybindings
@@ -193,6 +200,10 @@
 
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 
+  ;; Nicer dashes
+  (add-hook 'org-mode-hook
+            (lambda () (push '("--" . ?—) prettify-symbols-alist)))
+
   ;; Increase the number of lines that can be fontified
   (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
 
@@ -204,7 +215,6 @@
   (when (eq system-type 'darwin)
     (plist-put org-format-latex-options :scale 1)
     (setq org-preview-latex-default-process 'dvisvgm))
-
 
   ;; Center display equations
   (plist-put org-format-latex-options :justify 'center)
@@ -235,28 +245,28 @@
   ;; Define the publishing project
   (load-file "~/projects/tzcl.me/ox-tufte.el")
   (setq org-publish-project-alist
-       '(("tzcl.me"
-          :recursive t
-          :base-directory "~/projects/tzcl.me/content"
-          :publishing-directory "~/projects/tzcl.me/public/blog"
-          :publishing-function org-html-publish-to-tufte-html
+        '(("tzcl.me"
+           :recursive t
+           :base-directory "~/projects/tzcl.me/content"
+           :publishing-directory "~/projects/tzcl.me/public/blog"
+           :publishing-function org-html-publish-to-tufte-html
 
-          ;; Remove section numbers and table of contents
-          :section-numbers nil
-          :with-toc nil
+           ;; Remove section numbers and table of contents
+           :section-numbers nil
+           :with-toc nil
 
-          ;; HTML output settings
-          :html-container "section"
-          :html-divs ((preamble "div" "preamble")
-                      (content "article" "content")
-                      (postamble "div" "postamble"))
-          :html-doctype "html5"
-          :html-html5-fancy t
-          :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
-          :html-head-include-scripts nil
-          :html-head-include-default-style nil
-          :html-postamble nil
-          :html-validation-link nil)))
+           ;; HTML output settings
+           :html-container "section"
+           :html-divs ((preamble "div" "preamble")
+                       (content "article" "content")
+                       (postamble "div" "postamble"))
+           :html-doctype "html5"
+           :html-html5-fancy t
+           :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
+           :html-head-include-scripts nil
+           :html-head-include-default-style nil
+           :html-postamble nil
+           :html-validation-link nil)))
 
   ;; Fix ox-html bug
   (setq org-html-mathjax-template
