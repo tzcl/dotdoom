@@ -305,8 +305,8 @@
     (shell-command "rm ~/.emacs.d/.local/cache/org-latex/*")))
 
 (after! org-superstar
-  (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-16") ; temp hacks
-  (setq org-superstar-leading-bullet ?\s))
+  (setq org-superstar-leading-bullet ?\s)
+  (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-16"))
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
