@@ -195,8 +195,8 @@
   (setq org-hide-leading-stars nil
         org-indent-mode-turns-on-hiding-stars nil
         org-catch-invisible-edits 'error
-        org-ellipsis " ▼ "
-        org-hide-emphasis-markers 't)
+        org-hide-emphasis-markers t
+        org-ellipsis " ▼ ")
 
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 
@@ -325,6 +325,9 @@
         org-roam-ui-follow t
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
+
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode))
 
 (after! (:and solaire-mode org)
   (add-hook! 'org-mode-hook
