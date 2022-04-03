@@ -196,6 +196,7 @@
         org-indent-mode-turns-on-hiding-stars nil
         org-catch-invisible-edits 'error
         org-hide-emphasis-markers t
+        org-cycle-include-plain-lists 'integrate
         org-ellipsis " ▼ ")
 
   (setq org-refile-allow-creating-parent-nodes 'confirm)
