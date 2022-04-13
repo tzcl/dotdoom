@@ -29,7 +29,7 @@
   (interactive)
   (load-theme 'doom-monokai-pro t))
 
-(if (member (string-to-number (format-time-string "%H")) (number-sequence 6 18))
+(if (member (string-to-number (format-time-string "%H")) (number-sequence 7 17))
     (toby/light-theme)
   (toby/dark-theme))
 
