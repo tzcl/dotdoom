@@ -96,9 +96,6 @@
       :ei "C-p" #'evil-previous-line
       :ei "C-n" #'evil-next-line)
 
-(map! :map company-active-map
-      "<return>" #'company-complete-selection)
-
 ;;
 ;;; Packages
 
