@@ -89,6 +89,7 @@
 
 ;; in org-mode
 (map! :map org-mode-map
+      :after org
       :nv "SPC m h" #'toby/org-toggle-headings
       :ei "M-SPC m h" #'toby/org-toggle-headings)
 
