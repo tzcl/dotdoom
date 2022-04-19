@@ -178,6 +178,10 @@
 (after! haskell-mode
   (setq haskell-interactive-popup-errors nil))
 
+(after! lispy
+  (remove-hook! 'eval-expression-minibuffer-setup-hook
+    #'doom-init-lispy-in-eval-expression-h))
+
 (after! rjsx-mode
   (add-hook 'rjsx-mode-hook
             (lambda () (setq prettify-symbols-alist
@@ -313,7 +317,7 @@
 
 (after! org-superstar
   (setq org-superstar-leading-bullet ?\s)
-  (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-16"))
+  (set-face-attribute 'org-superstar-header-bullet nil :font "Fira Code-21"))
 
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚑" "⚑" "⚑")))
