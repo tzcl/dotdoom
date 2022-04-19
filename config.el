@@ -68,8 +68,7 @@
 (setq +ligatures-composition-alist (assq-delete-all ?\; +ligatures-composition-alist))
 
 ;; Disable extra ligatures
-(setq +ligatures-extras-in-modes
-      '('not python-mode cc-mode))
+(setq +ligatures-extras-in-modes '(not python-mode cc-mode rjsx-mode))
 
 ;;
 ;;; Keybindings
@@ -178,6 +177,12 @@
 
 (after! haskell-mode
   (setq haskell-interactive-popup-errors nil))
+
+(after! rjsx-mode
+  (add-hook 'rjsx-mode-hook
+            (lambda () (setq prettify-symbols-alist
+                        '(("() =>" . "λ")
+                          ("function" . "ƒ"))))))
 
 ;; HACK: see https://github.com/flycheck/flycheck/issues/1762
 (defvar-local my-flycheck-local-cache nil)
