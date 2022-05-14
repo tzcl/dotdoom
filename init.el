@@ -43,7 +43,7 @@
        ophints           ; highlight the region an operation acts on
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
        ;;pretty-code       ; replace bits of code with pretty symbols
-       (ligatures +extra)
+       ligatures
        ;;tabs              ; an tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages

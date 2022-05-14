@@ -67,9 +67,6 @@
 ;; Prevent ;; from being a ligature for better spacing
 (setq +ligatures-composition-alist (assq-delete-all ?\; +ligatures-composition-alist))
 
-;; Disable extra ligatures
-(setq +ligatures-extras-in-modes '(not python-mode cc-mode rjsx-mode))
-
 ;;
 ;;; Keybindings
 
