@@ -270,7 +270,7 @@
                        (postamble "div" "postamble"))
            :html-doctype "html5"
            :html-html5-fancy t
-           :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\" />"
+           :html-head "<link rel=\"stylesheet\" href=\"res/tufte.min.css\"/><script async defer data-website-id=\"6e6d5221-0e72-43ef-8e6e-27955832c259\" src=\"https://analytics.tzcl.me/umami.js\"></script>"
            :html-head-include-scripts nil
            :html-head-include-default-style nil
            :html-postamble nil
